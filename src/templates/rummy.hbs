@@ -69,9 +69,7 @@
 					{{#ifCond this.totalScore "gteq" ../../settings.gameScore}}
 						<button data-player-index="{{@index}}" class="re-enter js-re-enter" type="button">Re Enter</button>
 					{{/ifCond}}
-					{{#if ../rounds}}
-						asdfasdfasdf
-					{{else}}
+					{{#if ../rounds}}{{else}}
 						<button data-player-index="{{@index}}" type="button" class="remove js-remove">Remove</button>
 					{{/if}}
 					<!-- 
@@ -144,7 +142,7 @@
 					<table class="nameTable">
 						<tr>
 							{{#each rounds}}
-								<td>R: {{inc @index}}</td>
+								<td>{{inc @index}}</td>
 							{{/each}}
 						</tr>
 						{{#each players}}
