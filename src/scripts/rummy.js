@@ -1,52 +1,6 @@
-/* Adding missing jQuery functions. TODO Move this to a common folder later*/
-$.fn.serializeObject = function()
-{
-    var o = {};
-    var a = this.serializeArray();
-    $.each(a, function() {
-        if (o[this.name] !== undefined) {
-            if (!o[this.name].push) {
-                o[this.name] = [o[this.name]];
-            }
-            o[this.name].push(this.value || '');
-        } else {
-            o[this.name] = this.value || '';
-        }
-    });
-    return o;
-};
-
-
-Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
-
-    switch (operator) {
-        case 'eq':
-            return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case 'teq':
-            return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case 'lt':
-            return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case 'lteq':
-            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case 'gt':
-            return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case 'gteq':
-            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        case 'and':
-            return (v1 && v2) ? options.fn(this) : options.inverse(this);
-        case 'or':
-            return (v1 || v2) ? options.fn(this) : options.inverse(this);
-        default:
-            return options.inverse(this);
-    }
-});
-
-Handlebars.registerHelper("inc", function(value, options) {
-    return parseInt(value) + 1;
-});
-
-var rummy = {},
-	$box = $("#page"),
+var rummy =  rummy || {},
+	$box = $('#box'),
+	$page = $('#page'),
 	modelKey = 'rummyModel',
 	fbi = false; 
 
@@ -76,14 +30,14 @@ rummy.initModel = function() {
 		this.model.rounds = [];
 	}
 	//Init Data Template 
-	this.template = Handlebars.compile($('#template').html());
+	this.template = this["src/templates/rummy.hbs"];
 };
 
 
 rummy.initPageNames = function(){
-	$box.html(this.template(this.model));
+	$page.html(this.template(this.model));
 	rummy.pages = [];
-	$box.find('.page').each(function(){rummy.pages.push('#'+this.id);});
+	$page.find('.page').each(function(){rummy.pages.push('#'+this.id);});
 };
 
 rummy.showPage = function() {
@@ -113,13 +67,18 @@ rummy.showPage = function() {
 		rummy.updateScores();
 	}
 
-	$box.html(this.template(this.model))
+	$page.html(this.template(this.model))
 		.find('.page')
 		.fadeOut(animationDelay)
 		.delay(animationDelay)
 		.filter(pageName)
 		.fadeIn(function(){
 			window.scrollTo(0,0);
+			var title = $page.find('h1:visible').text();
+			if(title !== "Rummy"){
+				title = "Rummy " + title;
+			}
+			$('title').text(title);
 		});
 
 };
@@ -305,6 +264,13 @@ rummy.removePlayer = function(index){
 	};
 
 	rummy.model.players.splice(index, 1);
+
+	if(rummy.model.players.length < 2) {
+		rummy.resetScores();
+		rummy.model.gameInProgress = false;
+		rummy.model.winner = undefined;
+	}
+	
 	rummy.saveModel();
 	rummy.showPage();
 };
@@ -319,17 +285,52 @@ rummy.reEnterPlayer = function(index) {
 
 rummy.startGame = function() {
 	rummy.model.gameInProgress = true;
+	rummy.model.winner = undefined;
 	rummy.saveModel();
 	window.location.hash = '#scoreCard';	
 };
 
+rummy.isThereAWinner = function() {
+	var players = this.model.players,
+		playersLength = players.length,
+		i,
+		activePlayers = [];
+	for (i = 0; i < playersLength; i++){
+		if(players[i].totalScore < this.model.settings.gameScore){
+			activePlayers.push(players[i]);
+		}
+	}
+	if(activePlayers.length == 1){
+		rummy.model.winner = activePlayers[0];
+		rummy.model.gameInProgress = false;
+		rummy.saveModel();
+		return true;
+	}
+	return false;
+};
+
 rummy.bindEvents = function() {
 	
+	var hashMenuOpen = undefined;
+
 	$(window).on('hashchange', function(){
-		rummy.showPage();
+		if(window.location.hash != '#menu') {
+			if($box.hasClass('menu-open')){
+				$('ul.hamburger').trigger('click');
+			}
+			rummy.showPage();
+		}
 	});
 
-	$box.on('submit', 'form[name="scoreSettings"]', function(e){
+	$(document).on('click', '.js-hash', function(e){
+		e.preventDefault();
+		if($(this).parent().attr('class') == 'menu'){
+			$(this).closest('.menu-open').removeClass('menu-open');
+		}
+		window.location.hash = $(this).data('hash');
+	});
+
+	$page.on('submit', 'form[name="scoreSettings"]', function(e){
 		e.preventDefault();
 		rummy.model.settings = $(this).serializeObject();
 		rummy.saveModel();
@@ -340,7 +341,7 @@ rummy.bindEvents = function() {
 		}, 1000);
 	});
 
-	$box.on('submit', 'form[name="newGame"]', function(e){
+	$page.on('submit', 'form[name="newGame"]', function(e){
 		e.preventDefault();
 		if(rummy.model.players.length < 2){
 			if(fbi){
@@ -369,7 +370,7 @@ rummy.bindEvents = function() {
 	});
 
 	if(fbi){
-		$box.on('click', '#loginToFB button.cta', function(){
+		$page.on('click', '#loginToFB button.cta', function(){
 			FB.login(function(response) {
 			   if (response.authResponse) {
 			   		console.log('Welcome!  Fetching your information.... ');
@@ -383,54 +384,45 @@ rummy.bindEvents = function() {
 	}
 
 	if(fbi){
-		$box.on('blur','input[name="playerName"]', function(){
+		$page.on('blur','input[name="playerName"]', function(){
 			rummy.getFBFriendLists($(this).val());
 		});
 	}
 
-	$box.on('submit', 'form[name="addPlayer"]', function(e){
+	$page.on('submit', 'form[name="addPlayer"]', function(e){
 		e.preventDefault();
 		var data = $(this).serializeObject();
 		rummy.addPlayer(data);
 	});
 
-	$box.on('submit', 'form[name=saveRoundScore]', function(e){
+	$page.on('submit', 'form[name=saveRoundScore]', function(e){
 		e.preventDefault();
 		var data = $(this).serializeObject();
 		console.log("Saving round score");
 		console.log(data.roundScores);
-		// var roundScores = [];
-		// var scoresLength = data.roundScores.length;
-
-		// for (var i = 0; i < scoresLength; i++) {
-		// 	roundScores.push(+data.roundScores[i]);
-		// };
-		// console.log("Converting serialized text scores to numbers");
-		// console.log(roundScores);
-
 		rummy.addRoundScores(data.roundScores);
 		rummy.saveModel();
-		window.location.hash = '#scoreCard';
+		if(rummy.isThereAWinner()){
+			window.location.hash = '#winner';
+		}else{
+			window.location.hash = '#scoreCard';
+		}
 	});
 
-	$box.on('click', 'button.remove', function(e){
+	$page.on('click', '.js-remove', function(e){
 		e.preventDefault();
 		var index = $(this).data('playerIndex');
 		rummy.removePlayer(index);
 	});
 
-	$box.on('click', 'button.re-enter', function(e){
+	$page.on('click', '.js-re-enter', function(e){
 		e.preventDefault();
 		var index = $(this).data('playerIndex');
 		rummy.reEnterPlayer(index);
 	});
 
-	$box.on('click', 'button.hash', function(e){
+	$page.on('click', '#js-abandon', function(e){
 		e.preventDefault();
-		window.location.hash = $(this).data('hash');
-	});
-
-	$box.on('click', '#js-abandon', function(e){
 		console.log("Abandoning current game");
 		rummy.resetScores();
 		if(rummy.model.players.length < 2){ 
@@ -440,8 +432,14 @@ rummy.bindEvents = function() {
 		}
 	});
 
-	$('#box').on('click', 'ul.hamburger', function(){
-		$('#box').toggleClass('menu-open');
+	$box.on('click', 'ul.hamburger', function(){
+		$box.toggleClass('menu-open');
+		if(hashMenuOpen == undefined){
+			hashMenuOpen = window.location.hash;
+			window.location.hash = '#menu';
+		}else{
+			hashMenuOpen = undefined;
+		}
 	});
 
 };

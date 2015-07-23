@@ -13,17 +13,19 @@ ul.hamburger{
 	left: 20px;
 	top: 20px;
 	cursor: pointer;
-}
+	/*temporarily disabling hamburger*/
+	/*display: none; */
 
-ul.hamburger:hover {
-	background-color: #F1F1F1;
-}
+	&:hover {
+		background-color: #AABB88;
+	}
 
-ul.hamburger li {
-	height: 5px;
-	background-color: #000;
-	margin: 4px;
-	border-radius: 2px;
+	li {
+		height: 5px;
+		background-color: #000;
+		margin: 4px;
+		border-radius: 2px;
+	}
 }
 
 ul.menu {
@@ -38,35 +40,33 @@ ul.menu {
 	background-color: #000;
 	color: #FFF;
 	width: 150px;
+	li {
+		padding: 15px 20px;
+		border-bottom: 1px solid #444;
+		font-size: 14px;
+		cursor: pointer;
+	}
 }
 
-ul.menu li {
-	padding: 15px 20px;
-	border-bottom: 1px solid #444;
-	font-size: 14px;
-}
-
-.menu-open ul.menu {
-	left:0;
-}
-
-.menu-open ul.hamburger {
-	left: 170px;
-}
-
-.menu-open #page {
-	margin-left: 150px;
-	width: 350px;
+.menu-open {
+	ul.menu {
+		left:0;
+	}
+	ul.hamburger {
+		left: 170px;
+	}
+	#page {
+		margin-left: 150px;
+		width: 350px;
+	}
 }
 
 .menu-open #page, .menu-open ul.hamburger, .menu-open ul.menu{
-	-webkit-transition: all 0.3s ease;
-  	-moz-transition: all 0.3s ease;
-  	transition: all 0.3s ease;
+	transition(all 0.3s ease);
 }
 
 body {
-	background: url(../images/pattern.png) repeat #000;
+	background: url(../../images/pattern.png) repeat #000;
 	font-family: 'Open Sans', sans-serif;
 	margin: 0;
 	padding: 0;
@@ -86,11 +86,11 @@ footer{
 
 a {
 	color: #009B8E;
+	&:hover {
+		text-decoration: none;
+	}
 }
 
-a:hover {
-	text-decoration: none;
-}
 
 input {
 	border:1px solid #CCC;
@@ -174,7 +174,7 @@ table {
 }
 
 th {
-	background-color: #333;
+	background-color: #AABB88;
 	color: #FFF;
 } 
 
@@ -235,73 +235,70 @@ ol li {
 	margin-bottom: 20px;
 }
 
-.scoreCard .more{
-	display: none;
-}
-.scoreCard .totalScore{
-	float: right;
-}
-.scoreCard ol {
-	list-style: none;
-}
-.scoreCard .name {
-	display: inline-block;
-	width: 100px;
-	overflow: hidden;
-}
-.scoreCard .score{
-	display: inline-block;
-	width: 30px;
-}
+.scoreCard {
+	.more {
+		display: none;
+	}
+	.totalScore {
+		float: right;
+	}
+	ol {
+		list-style: none;
+	}
+	.name {
+		display: inline-block;
+		width: 100%;
+		overflow: hidden;
+		white-space: nowrap;
+	    text-overflow: ellipsis; 
+	    font-weight: 400;
+	}
+	.score {
+		display: inline-block;
+		width: 30px;
+	}
 
-.scoreCard td {
-	text-align: right;
-}
-.scoreCard .name {
-	width: 65px;
-	overflow: hidden;
-	white-space: nowrap;
-    text-overflow: ellipsis; 
-    font-weight: 400;
-}
-.scoreCard .vertical{
-	width: 100%;
-}
-.scoreCard .vertical .name{
-	width: 40px;
-}
-.scoreCard .small {
-	font-size: 11px;
-}
-
-.scoreCard .strike{
-	text-decoration: line-through;
-}
-
-.scoreCard .tableBox{
-	/*width: calc(100% - 130px);*/
-	overflow: scroll;
-	direction:rtl; 
-	background-color: #EEE;
-}
-
-.scoreCard .tables {
-	margin:20px 0;
-	white-space: nowrap;
-}
-
-.scoreCard .tables table{
-	margin: 0;
-	padding: 0;
-}
-
-.scoreCard .tableBox table{
-	direction:ltr; 	
-}
-
-.scoreCard table tr{
-	height: 52px;
-	overflow: hidden;
+	td {
+		text-align: right;
+	}
+	.vertical {
+		table-layout: fixed;
+		width: 100%;
+	}
+	.small {
+		font-size: 11px;
+	}
+	.strike {
+		text-decoration: line-through;
+	}
+	.tableBox {
+		/*width: calc(100% - 130px);*/
+		overflow: scroll;
+		direction:rtl; 
+		background-color: #EEE;
+		table {
+			direction:ltr; 	
+		}
+	}
+	.tables {
+		margin:20px 0;
+		white-space: nowrap;
+		table {
+			margin: 0;
+			padding: 0;
+		}
+	}
+	tr {
+		height: 52px;
+		overflow: hidden;
+	}
+	.nameTable{
+		float: left;
+		.name {
+			width: 50px;
+			font-size: 12px;
+		}
+	}
 }
 
 #roundScore input[type="number"] {
@@ -311,6 +308,7 @@ ol li {
 @media (max-width: 432px) {
 	h1 {
 		font-size: 1.4em;
+		margin: 5px 0 30px;
 	}
   	#box {
     	border: 0 none;

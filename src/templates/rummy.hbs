@@ -1,243 +1,267 @@
 <!-- Intro Page Template -->
-			<div id="intro" class="page">
-				<h1>Rummy</h1>
-				{{#if gameInProgress}}
-					<p>
-						<em>A game is currently in progress.</em>
-						<button class="cta hash" data-hash="#scoreCard">Score Card</button>
-						<br/>
-						or <a id="js-abandon">Start New Game</a>
-					</p>
+<div id="intro" class="page">
+	<h1>Rummy</h1>
+	{{#if gameInProgress}}
+		<p>
+			<em>A game is currently in progress.</em>
+			<button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
+			<br/>
+			or <a href="#" id="js-abandon">Start New Game</a>
+		</p>
+	{{else}}
+		{{#if winner}}
+		<p>
+			<b>"{{winner.name}}"</b> won this game.
+			<button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
+			<br/>
+			or <a href="#" id="js-abandon">Start New Game</a>
+		</p>
+		{{else}}
+			<form name="newGame"><button class="cta">Start New Game</button></form>
+		{{/if}}
+	{{/if}}
+	<br/>
+	<table border="1">
+		<tr>
+			<td>Game end score</td>
+			<td>
+				{{#if settings.gameScore}}
+					{{settings.gameScore}}
 				{{else}}
-					<form name="newGame"><button class="cta">Start New Game</button></form>
+					<i>not-set</i>
 				{{/if}}
-				<br/>
-				<table border="1">
-					<tr>
-						<td>Game end score</td>
-						<td>
-							{{#if settings.gameScore}}
-								{{settings.gameScore}}
-							{{else}}
-								<i>not-set</i>
-							{{/if}}
-						</td>
-					</tr>
-					<tr>
-						<td>Drop score</td>
-						<td>
-							{{#if settings.dropScore}}
-								{{settings.dropScore}}
-							{{else}}
-								<i>not-set</i>
-							{{/if}}
-						</td>
-					</tr>
-					<tr>
-						<td>Middle Drop score</td>
-						<td>
-							{{#if settings.middleDropScore}}
-								{{settings.middleDropScore}}
-							{{else}}
-								<i>not-set</i>
-							{{/if}}
-						</td>
-					</tr>
-				</table>
-				<br/>
-				<a href="#scoreSettings">Score Settings</a> | <a href="#players">Players ({{players.length}})</a>
-				<!-- <div class="fb-like" data-share="true" data-width="350"></div> -->
-			</div>
-
-			<!-- Players Page Template -->
-			<div id="players" class="page">
-				<h1>Players</h1>
-				<ol>
-					{{#each players}}
-    					<li>
-    						{{this.name}} 
-    						{{#if ../gameInProgress}}
-    							{{#ifCond this.totalScore "gteq" ../../settings.gameScore}}
-    								<button data-player-index="{{@index}}" class="re-enter" type="button">Re Enter</button>
-    							{{/ifCond}}
-    							<!-- 
-    								<button data-player-index="{{@index}}" title="Remove disabled: Game in progress..." type="button" disabled="disabled" class="remove disabled">Remove</button>
-    							-->
-    						{{/if}}
-    						<button data-player-index="{{@index}}" type="button" class="remove">Remove</button>
-    					</li>
-  					{{/each}}
-				</ol>
-				<form name="addPlayer">
-					<input type="text" name="name" required="required" placeholder="Enter player name"/>
-					<button class="cta">Add Player</button>
-				</form>
-
-				{{#if gameInProgress}}
-					<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
+			</td>
+		</tr>
+		<tr>
+			<td>Drop score</td>
+			<td>
+				{{#if settings.dropScore}}
+					{{settings.dropScore}}
 				{{else}}
-					{{#ifCond players.length 'gt' 1}}
-					<br />
-					<form name="newGame"><button class="cta">Start Game</button></form>
+					<i>not-set</i>
+				{{/if}}
+			</td>
+		</tr>
+		<tr>
+			<td>Middle Drop score</td>
+			<td>
+				{{#if settings.middleDropScore}}
+					{{settings.middleDropScore}}
+				{{else}}
+					<i>not-set</i>
+				{{/if}}
+			</td>
+		</tr>
+	</table>
+	<br/>
+	<a href="#scoreSettings">Score Settings</a> | <a href="#players">Players ({{players.length}})</a>
+	<!-- <div class="fb-like" data-share="true" data-width="350"></div> -->
+</div>
+
+<!-- Players Page Template -->
+<div id="players" class="page">
+	<h1>Players</h1>
+	<ol>
+		{{#each players}}
+			<li>
+				{{this.name}} 
+				{{#if ../gameInProgress}}
+					{{#ifCond this.totalScore "gteq" ../../settings.gameScore}}
+						<button data-player-index="{{@index}}" class="re-enter js-re-enter" type="button">Re Enter</button>
 					{{/ifCond}}
-				{{/if}}
-			</div>
-
-			<!-- Score Card Page Template -->
-			<div id="scoreCard" class="page scoreCard">
-				<h1>Score Card</h1>
-				{{#ifCond players.length 'gt' 4}}
-					<div class="tables">
-						<table style="float:left;">
-							<tr>
-								<th></th>
-							</tr>
-							{{#each players}}
-		    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
-		    						<th>
-		    							<div class="name">{{this.name}}</div>
-		    							<div class="small">
-		    								<em>D:</em> {{this.dropsLeft}},
-		    								<em>M:</em> {{this.middleDropsLeft}}
-		    							</div>
-		    						</th>
-		    					</tr>
-		  					{{/each}}
-						</table>
-						<div class="tableBox">
-							{{#ifCond roundNumber 'gteq' 5}}
-								<table>
-									<tr>
-										{{#each rounds}}
-											<td>{{inc @index}}</td>
-										{{/each}}
-										<td>T</td>
-									</tr>
-									{{#each players}}
-				    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
-											{{#each this.rounds}}
-												<td>{{this}}</td>
-											{{/each}}
-											<td><b>{{this.totalScore}}</b></td>
-				    					</tr>
-				  					{{/each}}
-								</table>
-							{{else}}
-								<table style="float:left">
-									<tr>
-										{{#each rounds}}
-											<td>R: {{inc @index}}</td>
-										{{/each}}
-									</tr>
-									{{#each players}}
-				    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
-											{{#each this.rounds}}
-												<td>{{this}}</td>
-											{{/each}}
-				    					</tr>
-				  					{{/each}}
-								</table>
-								<table>
-									<tr>
-										<td>T</td>
-									</tr>
-									{{#each players}}
-				    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
-											<td><b>{{this.totalScore}}</b></td>
-				    					</tr>
-				  					{{/each}}
-								</table>
-							{{/ifCond}}
-						</div>
-					</div>
+					<!-- 
+						<button data-player-index="{{@index}}" title="Remove disabled: Game in progress..." type="button" disabled="disabled" class="remove disabled">Remove</button>
+					-->
 				{{else}}
-					<table border="1" class="vertical">
+					<button data-player-index="{{@index}}" type="button" class="remove js-remove">Remove</button>
+				{{/if}}
+			</li>
+			{{/each}}
+	</ol>
+	<form name="addPlayer">
+		<input type="text" name="name" required="required" placeholder="Enter player name"/>
+		<button class="cta">Add Player</button>
+	</form>
+
+	{{#if gameInProgress}}
+		<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
+	{{else}}
+		{{#ifCond players.length 'gt' 1}}
+			{{#if winner}}
+				<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
+			{{else}}
+				<br /><form name="newGame"><button class="cta">Start Game</button></form>
+			{{/if}}
+		{{/ifCond}}
+	{{/if}}
+</div>
+
+<!-- Score Card Page Template -->
+<div id="scoreCard" class="page scoreCard">
+	<h1>Score Card</h1>
+	{{#ifCond players.length 'gt' 4}}
+		<div class="tables">
+			<table class="nameTable">
+				<tr>
+					<th></th>
+				</tr>
+				{{#each players}}
+					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
+						<th>
+							<div class="name">{{this.name}}</div>
+							<div class="small">
+								<em>D:</em> {{this.dropsLeft}},
+								<em>M:</em> {{this.middleDropsLeft}}
+							</div>
+						</th>
+					</tr>
+					{{/each}}
+			</table>
+			<div class="tableBox">
+				{{#ifCond roundNumber 'gteq' 5}}
+					<table>
 						<tr>
-							<th></th>
-							{{#each players}}
-								<th class="small{{#ifCond this.totalScore "gteq" ../settings.gameScore}} strike{{/ifCond}}">
-	    							<div class="name">{{this.name}}</div>
-	    							<div>
-	    								<em>D:</em> {{this.dropsLeft}}<br/>
-	    								<em>M:</em> {{this.middleDropsLeft}}
-	    							</div>
-	    						</th>
-	    					{{/each}}
-	    				</tr>
-	    				{{#each rounds}}
-	    					<tr>
-	    						<td class="small">{{inc @index}}</td>
-	    						{{#each this}}
-	    							<td>{{this}}</td>
-	    						{{/each}}
+							{{#each rounds}}
+								<td>{{inc @index}}</td>
+							{{/each}}
+							<td>T</td>
+						</tr>
+						{{#each players}}
+	    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
+								{{#each this.rounds}}
+									<td>{{this}}</td>
+								{{/each}}
+								<td><b>{{this.totalScore}}</b></td>
 	    					</tr>
-	    				{{/each}}
-	    				<tr>
-	    					<td class="small">T</td>
-							{{#each players}}
-								<td {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
-	    							<b>{{this.totalScore}}</b>
-	    						</td>
-	    					{{/each}}
-	    				</tr>
+	  					{{/each}}
+					</table>
+				{{else}}
+					<table class="nameTable">
+						<tr>
+							{{#each rounds}}
+								<td>R: {{inc @index}}</td>
+							{{/each}}
+						</tr>
+						{{#each players}}
+	    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
+								{{#each this.rounds}}
+									<td>{{this}}</td>
+								{{/each}}
+	    					</tr>
+	  					{{/each}}
+					</table>
+					<table>
+						<tr>
+							<td>T</td>
+						</tr>
+						{{#each players}}
+	    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
+								<td><b>{{this.totalScore}}</b></td>
+	    					</tr>
+	  					{{/each}}
 					</table>
 				{{/ifCond}}
-				<button class="cta hash" data-hash="#roundScore">Enter Scores</button>
-				<p>
-					<a href="#scoreSettings">Score Settings</a> | <a href="#players">Players ({{players.length}})</a>
-				</p>
 			</div>
+		</div>
+	{{else}}
+		<table border="1" class="vertical">
+			<tr>
+				<th></th>
+				{{#each players}}
+					<th class="small{{#ifCond this.totalScore "gteq" ../settings.gameScore}} strike{{/ifCond}}">
+						<div class="name">{{this.name}}</div>
+						<div>
+							<em>D:</em> {{this.dropsLeft}}<br/>
+							<em>M:</em> {{this.middleDropsLeft}}
+						</div>
+					</th>
+				{{/each}}
+			</tr>
+			{{#each rounds}}
+				<tr>
+					<td class="small">{{inc @index}}</td>
+					{{#each this}}
+						<td>{{this}}</td>
+					{{/each}}
+				</tr>
+			{{/each}}
+			<tr>
+				<td class="small">T</td>
+				{{#each players}}
+					<td {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
+						<b>{{this.totalScore}}</b>
+					</td>
+				{{/each}}
+			</tr>
+		</table>
+	{{/ifCond}}
+	<button class="cta js-hash" data-hash="#roundScore">Enter Scores</button>
+	<p>
+		<a href="#scoreSettings">Score Settings</a> | <a href="#players">Players ({{players.length}})</a>
+	</p>
+</div>
 
-			<!-- Round Score Page Template -->
-			<div id="roundScore" class="page">
-				<h1>Round {{roundNumber}} Scores</h1>
-				<form name="saveRoundScore">
-					{{#each players}}
-						{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
-							<input type="hidden" name="roundScores" value="0" />
-						{{else}}
-							<input type="number" min="0" max="80" name="roundScores" value="" required="required" placeholder="Enter {{this.name}}'s Score"/>
-						{{/ifCond}}
-  					{{/each}}
-  					<button class="cta">Save</button>
-				</form>
+<!-- Round Score Page Template -->
+<div id="roundScore" class="page">
+	<h1>Round {{roundNumber}} Scores</h1>
+	<form name="saveRoundScore">
+		{{#each players}}
+			{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
+				<input type="hidden" name="roundScores" value="0" />
+			{{else}}
+				<input type="number" min="0" max="80" name="roundScores" value="" required="required" placeholder="Enter {{this.name}}'s Score"/>
+			{{/ifCond}}
+			{{/each}}
+			<button class="cta">Save</button>
+	</form>
+	<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
+</div>
+
+<!-- Log In to Facebook Page Template -->
+<div id="loginToFB" class="page">
+	<h1>Log in to Facebook</h1>
+	<p>Logging makes adding players a breeze. No spaming we promise</p>
+	<button class="cta">Log in to Facebook</button>
+</div>
+
+<!-- Score Settings Page Template -->
+<div id="scoreSettings" class="page">
+	<h1>Score Settings</h1>
+	<form name="scoreSettings">
+		<div>
+			<label>Game end score</label>
+			<input type="number" min="100" max="500" name="gameScore" placeholder="Game end score" value="{{settings.gameScore}}" required="required"/>
+			<div class="error">Choose a value between 100 and 500</div>
+		</div>
+		<div>
+			<label>Drop score</label>
+			<input type="number" min="10" max="50" name="dropScore" placeholder="Drop score" value="{{settings.dropScore}}"  required="required" />
+			<div class="error">Choose a value between 10 and 50</div>
+		</div>
+		<div>
+			<label>Middle drop score</label>
+			<input type="number" min="20" max="100" name="middleDropScore" placeholder="Middle drop score" value="{{settings.middleDropScore}}" required="required" />
+			<div class="error">Choose a value between 20 and 100</div>
+		</div>
+		<button class="cta" >Save Game Settings</button>
+	</form>
+	{{#if gameInProgress}}
+		<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
+	{{else}}
+		{{#ifCond players.length 'gt' 1}}
+			{{#if winner}}
 				<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
-			</div>
+			{{else}}
+				<br /><form name="newGame"><button class="cta">Start Game</button></form>
+			{{/if}}
+		{{/ifCond}}
+	{{/if}}
+</div>
 
-			<!-- Log In to Facebook Page Template -->
-			<div id="loginToFB" class="page">
-				<h1>Log in to Facebook</h1>
-				<p>Logging makes adding players a breeze. No spaming we promise</p>
-				<button class="cta">Log in to Facebook</button>
-			</div>
-
-			<!-- Score Settings Page Template -->
-			<div id="scoreSettings" class="page">
-				<h1>Score Settings</h1>
-				<form name="scoreSettings">
-					<div>
-						<label>Game end score</label>
-						<input type="number" min="100" max="500" name="gameScore" placeholder="Game end score" value="{{settings.gameScore}}" required="required"/>
-						<div class="error">Choose a value between 100 and 500</div>
-					</div>
-					<div>
-						<label>Drop score</label>
-						<input type="number" min="10" max="50" name="dropScore" placeholder="Drop score" value="{{settings.dropScore}}"  required="required" />
-						<div class="error">Choose a value between 10 and 50</div>
-					</div>
-					<div>
-						<label>Middle drop score</label>
-						<input type="number" min="20" max="100" name="middleDropScore" placeholder="Middle drop score" value="{{settings.middleDropScore}}" required="required" />
-						<div class="error">Choose a value between 20 and 100</div>
-					</div>
-					<button class="cta" >Save Game Settings</button>
-				</form>
-				{{#if gameInProgress}}
-					<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
-				{{else}}
-					{{#ifCond players.length 'gt' 1}}
-					<br />
-					<form name="newGame"><button class="cta">Start Game</button></form>
-					{{/ifCond}}
-				{{/if}}
-			</div>
+<!-- Winner Page Template -->
+<div id="winner" class="page">
+	<h1>We have a winner</h1>
+	<p>Congratulations <b>{{winner.name}}</b>!!!</p>
+	<br />
+	<button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
+</div>
