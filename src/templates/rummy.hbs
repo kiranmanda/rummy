@@ -69,6 +69,11 @@
 					{{#ifCond this.totalScore "gteq" ../../settings.gameScore}}
 						<button data-player-index="{{@index}}" class="re-enter js-re-enter" type="button">Re Enter</button>
 					{{/ifCond}}
+					{{#if ../rounds}}
+						asdfasdfasdf
+					{{else}}
+						<button data-player-index="{{@index}}" type="button" class="remove js-remove">Remove</button>
+					{{/if}}
 					<!-- 
 						<button data-player-index="{{@index}}" title="Remove disabled: Game in progress..." type="button" disabled="disabled" class="remove disabled">Remove</button>
 					-->
