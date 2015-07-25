@@ -1,9 +1,17 @@
 <html>
 	<head>
 		<title>Rummy Score Card</title>
+		<meta charset="UTF-8">
+		<meta name="description" content="Rummy score card is a web application that lets you keep track of scores, show progress graphs and more">
+		<meta name="keywords" content="Rummy Score Card, Card Game">
+		<meta name="author" content="Kiran Manda">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="mobile-web-app-capable" content="yes">
+		<meta property="og:title" content="Rummy Score Card" />
+		<meta property="og:site_name" content="Rummy Score Card"/>
+		<meta property="og:url" content="http://www.rummyscorecard.com" />
+		<meta property="og:description" content="Rummy score card is a web application that lets you keep track of scores, show progress graphs and more" />
 		<link rel='stylesheet' type='text/css' href='http://fonts.googleapis.com/css?family=Open+Sans:700,300,600,400'>
 		<link rel="stylesheet" type="text/css" href="target/css/rummy.css">
 	</head>
@@ -14,18 +22,15 @@
 				<li class="js-hash" data-hash="#intro">Home</li>
 				<li class="js-hash" data-hash="#scoreSettings">Score Settings</li>
 				<li class="js-hash" data-hash="#players">Players</li>
+				<li class="js-hash" data-hash="#about">About</li>
 			</ul>
 			<div id="page"></div>
 		</div>
-		<footer>&copy; 2015 P<u>a</u>YK<u>i</u>M</footer>
+		<div class="footer">
+			&copy; 2015 P<u>a</u>YK<u>i</u>M <a href="#terms">Terms &amp; Conditions</a>
+		</div>
 		<script type="text/javascript" src="target/js/vendor.min.js" ></script>
-		<script type="text/javascript" src="target/js/rummy.min.js" ></script>
-		<!--
-		<script type="text/javascript" src="src/scripts/handlebarsHelper.js" ></script>
-		<script type="text/javascript" src="src/scripts/jQueryHelper.js" ></script>
-		<script type="text/javascript" src="target/js/templates.js" ></script>
-		<script type="text/javascript" src="src/scripts/rummy.js" ></script>
-		-->
+		<script type="text/javascript" src="target/js/rummy.min.js" ></script> 
 		<script type="text/javascript">
 			if(rummy){
 				rummy.init();

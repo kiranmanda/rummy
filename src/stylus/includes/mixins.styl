@@ -25,7 +25,7 @@ opacity($opacity = .5) {
     filter: unquote('alpha(opacity=' + round($opacity * 100) + ')');
 }
 
-border-radius($topright = 2px , $bottomright = 2px , $bottomleft = 2px , $topleft = 2px) {
+borderRadius($topright = 2px , $bottomright = 2px , $bottomleft = 2px , $topleft = 2px) {
 	-webkit-border-top-right-radius: $topright;
 	-webkit-border-bottom-right-radius: $bottomright;
 	-webkit-border-bottom-left-radius: $bottomleft;
@@ -41,25 +41,25 @@ border-radius($topright = 2px , $bottomright = 2px , $bottomleft = 2px , $toplef
 	background-clip (padding-box);
 }
 
-background-clip($argument = padding-box) {
+backgroundClip($argument = padding-box) {
 	-moz-background-clip: $argument;
 	-webkit-background-clip: $argument;
 	background-clip: $argument;
 }
 
-inner-shadow($horizontal = 0 , $vertical = 1px , $blur = 2px , $alpha = 0.4) {
+innerShadow($horizontal = 0 , $vertical = 1px , $blur = 2px , $alpha = 0.4) {
 	-webkit-box-shadow: inset $horizontal $vertical $blur rgba(0, 0, 0, $alpha);
 	-moz-box-shadow: inset $horizontal $vertical $blur rgba(0, 0, 0, $alpha);
 	box-shadow: inset $horizontal $vertical $blur rgba(0, 0, 0, $alpha);
 }
 
-box-shadow($arguments) {
+boxShadow($arguments) {
 	-webkit-box-shadow: $arguments;
 	-moz-box-shadow: $arguments;
 	box-shadow: $arguments;
 }
 
-box-sizing($sizing = border-box) {
+boxSizing($sizing = border-box) {
 	-ms-box-sizing: $sizing;
 	-moz-box-sizing: $sizing;
 	-webkit-box-sizing: $sizing;

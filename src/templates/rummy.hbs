@@ -100,18 +100,16 @@
 </div>
 
 <!-- Score Card Page Template -->
-<div id="scoreCard" class="page scoreCard">
+<div id="scoreCardGraph" class="page scoreCard">
 	<h1>Score Card</h1>
 	<div id="graphContainer"></div>
 	<br/>
 	<button class="cta js-hash" data-hash="#roundScore">Enter Scores</button>
-	<p>
-		<a href="#scoreSettings">Score Settings</a> | <a href="#players">Players ({{players.length}})</a>
-	</p>
+	<p><a href="#scoreCard">Show Table View</a></p>
 </div>
 
 <!-- Score Card Page Template -->
-<div id="scoreCardTable" class="page scoreCard">
+<div id="scoreCard" class="page scoreCard">
 	<h1>Score Card</h1>
 	{{#ifCond players.length 'gt' 4}}
 		<div class="tables">
@@ -136,16 +134,16 @@
 					<table>
 						<tr>
 							{{#each rounds}}
-								<td>{{inc @index}}</td>
+								<td><span class="round">{{inc @index}}</span></td>
 							{{/each}}
-							<td>T</td>
+							<td class="total">T</td>
 						</tr>
 						{{#each players}}
 	    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
 								{{#each this.rounds}}
 									<td>{{this}}</td>
 								{{/each}}
-								<td><b>{{this.totalScore}}</b></td>
+								<td class="total"><b>{{this.totalScore}}</b></td>
 	    					</tr>
 	  					{{/each}}
 					</table>
@@ -153,7 +151,7 @@
 					<table class="nameTable">
 						<tr>
 							{{#each rounds}}
-								<td>{{inc @index}}</td>
+								<td><span class="round">{{inc @index}}</span></td>
 							{{/each}}
 						</tr>
 						{{#each players}}
@@ -164,7 +162,7 @@
 	    					</tr>
 	  					{{/each}}
 					</table>
-					<table>
+					<table class="total">
 						<tr>
 							<td>T</td>
 						</tr>
@@ -180,26 +178,26 @@
 	{{else}}
 		<table border="1" class="vertical">
 			<tr>
-				<th></th>
+				<th width="10"></th>
 				{{#each players}}
 					<th class="small{{#ifCond this.totalScore "gteq" ../settings.gameScore}} strike{{/ifCond}}">
 						<div class="name">{{this.name}}</div>
-						<div>
-							<em>D:</em> {{this.dropsLeft}}<br/>
-							<em>M:</em> {{this.middleDropsLeft}}
+						<div class="dropsleft">
+							<span>D:&nbsp;{{this.dropsLeft}}</span>
+							<span>M:&nbsp;{{this.middleDropsLeft}}</span>
 						</div>
 					</th>
 				{{/each}}
 			</tr>
 			{{#each rounds}}
 				<tr>
-					<td class="small">{{inc @index}}</td>
+					<td class="small"><span class="round">{{inc @index}}</span></td>
 					{{#each this}}
 						<td>{{this}}</td>
 					{{/each}}
 				</tr>
 			{{/each}}
-			<tr>
+			<tr class="total">
 				<td class="small">T</td>
 				{{#each players}}
 					<td {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
@@ -210,14 +208,12 @@
 		</table>
 	{{/ifCond}}
 	<button class="cta js-hash" data-hash="#roundScore">Enter Scores</button>
-	<p>
-		<a href="#scoreSettings">Score Settings</a> | <a href="#players">Players ({{players.length}})</a>
-	</p>
+	<p><a href="#scoreCardGraph">Show Graph View</a></p>
 </div>
 
 <!-- Round Score Page Template -->
 <div id="roundScore" class="page">
-	<h1>Round {{roundNumber}} Scores</h1>
+	<h1>Round {{inc rounds.length}} Scores</h1>
 	<form name="saveRoundScore">
 		{{#each players}}
 			{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
@@ -279,3 +275,68 @@
 	<br />
 	<button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
 </div>
+
+<div id="about" class="page">
+	<h1>About</h1>
+	<h3>Founders</h3>
+	<ul>
+		<li>Kiran Manda - <a href="http://www.kiranmanda.com">http://www.kiranmanda.com</a></li>
+		<li>Pradeep Yalamanchili</li>
+	</ul>
+	<h3>Our Story - For the LOVE of rummy</h3>
+	<p>
+		Pradeep my friend is a big fan of rummy. He plays this card game with his fellow rummy enthusists. One day he floated this idea about score tracking while playing the game. We brainstormed some ideas and quickly put together this single page web application. We hope you like this.
+	</p>
+	<p>
+		This web application uses browser's local storage to store data. Certain browsers may not support localstorage in private browsing.
+	</p>
+
+</div>
+
+<!-- Terms and Conditions Page Template -->
+<div id="terms" class="page">
+	<h1>Terms and Conditions ("Terms")</h1>
+	<p>Last updated: July 25, 2015</p>
+
+	<p>Please read these Terms and Conditions ("Terms", "Terms and Conditions") carefully before using the http://www.rummyscorecard.com website (the "Service") operated by Rummy Score Card ("us", "we", or "our").</p>
+
+	<p>Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users and others who access or use the Service.</p>
+
+	<p>By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms then you may not access the Service.</p>
+
+
+	<p><strong>Links To Other Web Sites</strong></p>
+
+	<p>Our Service may contain links to third-party web sites or services that are not owned or controlled by Rummy Score Card.</p>
+
+	<p>Rummy Score Card has no control over, and assumes no responsibility for, the content, privacy policies, or practices of any third party web sites or services. You further acknowledge and agree that Rummy Score Card shall not be responsible or liable, directly or indirectly, for any damage or loss caused or alleged to be caused by or in connection with use of or reliance on any such content, goods or services available on or through any such web sites or services.</p>
+
+	<p>We strongly advise you to read the terms and conditions and privacy policies of any third-party web sites or services that you visit.</p>
+
+	<p><strong>Termination</strong></p>
+
+	<p>We may terminate or suspend access to our Service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.</p>
+
+	<p>All provisions of the Terms which by their nature should survive termination shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.</p>
+
+
+	<p><strong>Governing Law</strong></p>
+
+	<p>These Terms shall be governed and construed in accordance with the laws of Oregon, United States, without regard to its conflict of law provisions.</p>
+
+	<p>Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect. These Terms constitute the entire agreement between us regarding our Service, and supersede and replace any prior agreements we might have between us regarding the Service.</p>
+
+	<p><strong>Changes</strong></p>
+
+	<p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material we will try to provide at least 30 days notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</p>
+
+	<p>By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service.</p>
+
+	<p>Our Terms and Conditions agreement was generated by <a href="https://termsfeed.com/terms-conditions/generator/">TermsFeed Terms and Conditions Generator</a>.</p>
+
+	<p><strong>Contact Us</strong></p>
+
+	<p>If you have any questions about these Terms, please contact us.</p>
+</div>
+
+

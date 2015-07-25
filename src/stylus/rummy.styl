@@ -1,5 +1,9 @@
 @import "includes/mixins";
 
+h1 {
+	font-weight: 600px;
+}
+
 ul.hamburger{
 	border: 1px solid #CCC;
 	list-style: none;
@@ -13,18 +17,19 @@ ul.hamburger{
 	left: 20px;
 	top: 20px;
 	cursor: pointer;
-	/*temporarily disabling hamburger*/
-	/*display: none; */
-
-	&:hover {
-		background-color: #AABB88;
-	}
 
 	li {
 		height: 5px;
 		background-color: #000;
 		margin: 4px;
 		border-radius: 2px;
+	}
+
+	&:hover {
+		background-color: #f1f1f1;
+		li {
+			background-color: #000;
+		}
 	}
 }
 
@@ -77,15 +82,20 @@ form{
 	padding: 0;
 }
 
-footer{
-	font-size: 0.7em;
+.footer{
+	font-size: 10px;
 	color:#999;
 	text-align: center;
 	padding: 10px;
+
+	a {
+		font-size: 10px;
+	}
 }
 
 a {
-	color: #009B8E;
+	color: #2c9ab7;
+	font-size: 13px;
 	&:hover {
 		text-decoration: none;
 	}
@@ -116,20 +126,63 @@ label {
 	overflow: hidden;
 }
 
+#about {
+	text-align: left;
+	h1 {
+		text-align: center;
+	}
+	p, li {
+		font-size: 14px;
+		line-height: 1.5em;
+	}
+	p{
+		margin: 0 0 20px 0;
+	}
+	h3{
+		margin: 0 0 20px 0;
+	}
+}
+
+#terms {
+	text-align: left;
+	h1{
+		text-align: center;
+		font-size: 12px;
+	}
+	p {
+		font-size: 10px;
+		line-height: 1.2em;
+	}
+	a {
+		color: #000;
+		text-decoration: none;
+	}
+}
+
 .page {
 	display: none;
 }
 
 button {
-	background-color: #333;
-	border-radius:2px;
-	border: 1px solid #000;
+	background-color: #e85c41;
+	border: none;
+	border-radius: 4px;
 	color: #FFF;
 	font-size: 14px;
 	outline: none;
 	padding: 15px;
-	text-transform: uppercase;
 	width:100%;
+	transition(all 0.3s ease);
+	max-width: 350px;
+}
+
+button:hover {
+	background-color: #db3a1b;
+	cursor: pointer;
+}
+
+button:active {
+	background-color: #e85c41;
 }
 
 button[disabled="disabled"].disabled, button[disabled="disabled"].disabled:hover {
@@ -144,24 +197,16 @@ button.remove, button.re-enter {
 	padding: 3px 5px;
 	float: right;
 	width: auto;
+	border-radius: 2px;
 	text-transform: none;
 }
 
 button.re-enter {
-	background-color: #333;
+	background-color: #e85c41;
 }
 
 button.remove:hover {
 	background-color: #ED4958;
-}
-
-button:hover {
-	background-color: #000;
-	cursor: pointer;
-}
-
-button:active {
-	background-color: #333;
 }
 
 .back {
@@ -174,16 +219,36 @@ table {
 }
 
 th {
-	background-color: #AABB88;
-	color: #FFF;
-} 
+	background-color: #B3B3B3;
+	color: #000;
+}
+
+tr:nth-child(odd) {
+    background-color: #F1F1F1;
+}
 
 td, th {
-	padding: 10px;
+	padding: 5px 10px;
 	text-align: center;
 }
 
-table{
+.total {
+	/*background: #AABBCC;*/
+}
+
+.round {
+	display: inline-block;
+    background: #2c9ab7;
+    color: #FFF;
+    border-radius: 10px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 10px;
+}
+
+table {
 	margin: 20px auto;
 }
 
@@ -222,8 +287,13 @@ ol li {
 	border-bottom: 1px solid #999;
 }
 
-#intro button{
-	margin: 20px 0;
+#intro {
+	button {
+		margin: 20px 0;
+	}
+	table {
+		border: 1px solid #CCC;
+	}
 }
 
 #rules {
@@ -252,6 +322,7 @@ ol li {
 		white-space: nowrap;
 	    text-overflow: ellipsis; 
 	    font-weight: 400;
+	    line-height: 1.5em;
 	}
 	.score {
 		display: inline-block;
@@ -261,13 +332,22 @@ ol li {
 	td {
 		text-align: right;
 	}
+
 	.vertical {
+		border: 1px solid #CCC;
 		table-layout: fixed;
 		width: 100%;
+		.dropsleft > span{
+			white-space: nowrap;
+		}
 	}
+
 	.small {
 		font-size: 11px;
+		padding: 0;
+		text-align: center;
 	}
+
 	.strike {
 		text-decoration: line-through;
 	}
@@ -275,17 +355,22 @@ ol li {
 		/*width: calc(100% - 130px);*/
 		overflow: scroll;
 		direction:rtl; 
-		background-color: #EEE;
+		/*background-color: #EEE;*/
 		table {
 			direction:ltr; 	
 		}
 	}
 	.tables {
+		background: url(../../images/table-stripes.gif) repeat #FFF;
 		margin:20px 0;
 		white-space: nowrap;
+		border: 1px solid #CCC;
 		table {
 			margin: 0;
 			padding: 0;
+		}
+		tr:nth-child(odd) {
+		    background-color: transparent;
 		}
 	}
 	tr {
@@ -293,10 +378,16 @@ ol li {
 		overflow: hidden;
 	}
 	.nameTable{
+		background-color: transparent;
 		float: left;
+		boxShadow(2px 0px 2px #BBB);
 		.name {
 			width: 50px;
 			font-size: 12px;
+			line-height: 1.5em;
+		}
+		th {
+			background-color: transparent;
 		}
 	}
 }

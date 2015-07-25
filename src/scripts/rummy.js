@@ -3,7 +3,7 @@ var rummy =  rummy || {},
 	$page = $('#page'),
 	modelKey = 'rummyModel',
 	fbi = false,
-	logLevel = Cookies.get('logLevel') || 'DEBUG',
+	logLevel = Cookies.get('logLevel') || 'ERROR',
 	log = (logLevel === 'DEBUG' && console && typeof console.log === 'function');
 
 rummy.fb = {};
@@ -93,7 +93,7 @@ rummy.showPage = function() {
 			}
 			$('title').text(title);
 
-			if(pageName == '#scoreCard'){
+			if(pageName == '#scoreCardGraph'){
 				rummy.showDrillDownGraph();
 			}
 		});
@@ -208,6 +208,10 @@ rummy.showDrillDownGraph = function(){
             type: 'category'
         },
 
+        title: {
+            text: 'Scores'
+        },
+
         legend: {
             enabled: false
         },
@@ -256,60 +260,60 @@ rummy.showDrillDownGraph = function(){
     });
 };
 
-rummy.showBarGraph = function(){
-	rummy.log("Showing Graph");
+// rummy.showBarGraph = function(){
+// 	rummy.log("Showing Graph");
 
-	var playerNames = rummy.getPlayerNames(),
-		roundData = rummy.getRoundData();
+// 	var playerNames = rummy.getPlayerNames(),
+// 		roundData = rummy.getRoundData();
 
-	rummy.log(playerNames);
-	rummy.log(roundData);
+// 	rummy.log(playerNames);
+// 	rummy.log(roundData);
 
-	$('#graphContainer').highcharts({
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: ''
-        },
-        xAxis: {
-            categories: playerNames
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: 'Scores'
-            },
-            stackLabels: {
-                enabled: true,
-                style: {
-                    fontWeight: 'bold',
-                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                }
-            }
-        },
-        tooltip: {
-            formatter: function () {
-                return '<b>' + this.x + '</b><br/>' +
-                    this.series.name + ': ' + this.y + '<br/>' +
-                    'Total: ' + this.point.stackTotal;
-            }
-        },
-        plotOptions: {
-            column: {
-                stacking: 'normal',
-                dataLabels: {
-                    enabled: true,
-                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-                    style: {
-                        textShadow: '0 0 3px black'
-                    }
-                }
-            }
-        },
-        series: roundData
-    });
-};
+// 	$('#graphContainer').highcharts({
+//         chart: {
+//             type: 'column'
+//         },
+//         title: {
+//             text: ''
+//         },
+//         xAxis: {
+//             categories: playerNames
+//         },
+//         yAxis: {
+//             min: 0,
+//             title: {
+//                 text: 'Scores'
+//             },
+//             stackLabels: {
+//                 enabled: true,
+//                 style: {
+//                     fontWeight: 'bold',
+//                     color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+//                 }
+//             }
+//         },
+//         tooltip: {
+//             formatter: function () {
+//                 return '<b>' + this.x + '</b><br/>' +
+//                     this.series.name + ': ' + this.y + '<br/>' +
+//                     'Total: ' + this.point.stackTotal;
+//             }
+//         },
+//         plotOptions: {
+//             column: {
+//                 stacking: 'normal',
+//                 dataLabels: {
+//                     enabled: true,
+//                     color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+//                     style: {
+//                         textShadow: '0 0 3px black'
+//                     }
+//                 }
+//             }
+//         },
+//         series: roundData
+//     });
+// };
 
 rummy.updateScores = function(){
 	var players = rummy.model.players,
