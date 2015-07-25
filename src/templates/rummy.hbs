@@ -102,6 +102,17 @@
 <!-- Score Card Page Template -->
 <div id="scoreCard" class="page scoreCard">
 	<h1>Score Card</h1>
+	<div id="graphContainer"></div>
+	<br/>
+	<button class="cta js-hash" data-hash="#roundScore">Enter Scores</button>
+	<p>
+		<a href="#scoreSettings">Score Settings</a> | <a href="#players">Players ({{players.length}})</a>
+	</p>
+</div>
+
+<!-- Score Card Page Template -->
+<div id="scoreCardTable" class="page scoreCard">
+	<h1>Score Card</h1>
 	{{#ifCond players.length 'gt' 4}}
 		<div class="tables">
 			<table class="nameTable">

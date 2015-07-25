@@ -2,12 +2,20 @@ var rummy =  rummy || {},
 	$box = $('#box'),
 	$page = $('#page'),
 	modelKey = 'rummyModel',
-	fbi = false; 
+	fbi = false,
+	logLevel = Cookies.get('logLevel') || 'DEBUG',
+	log = (logLevel === 'DEBUG' && console && typeof console.log === 'function');
 
 rummy.fb = {};
 
+rummy.log = function(msg) {
+	if(log){
+		console.log(msg);
+	}
+};
+
 rummy.init = function() {
-	console.log(this);
+	rummy.log(this);
 	this.initModel();
 	this.initPageNames();
 	this.showPage();
@@ -40,6 +48,11 @@ rummy.initPageNames = function(){
 	$page.find('.page').each(function(){rummy.pages.push('#'+this.id);});
 };
 
+rummy.isScoreCardView = function () {
+	var hash = window.location.hash;
+	return (hash === '#scoreCard' || hash === '#scoreCardTable');
+};
+
 rummy.showPage = function() {
 	var pageName = window.location.hash,
 		animationDelay = 400;	
@@ -51,19 +64,19 @@ rummy.showPage = function() {
 	}
 
 	/* No players so taking the user to intro page*/
-	if(pageName == '#scoreCard' && rummy.model.players.length == 0){
+	if(rummy.isScoreCardView() && rummy.model.players.length == 0){
 		window.location.hash = "#intro";
 		return;
 	}
 
 	/* Not enough players so taking the user to players page*/
-	if(pageName == '#scoreCard' && rummy.model.players.length < 2){
+	if(rummy.isScoreCardView() && rummy.model.players.length < 2){
 		window.location.hash = "#players";
 		return;
 	}
 
 	/*Update scores*/
-	if(pageName == '#scoreCard'){
+	if(rummy.isScoreCardView()){
 		rummy.updateScores();
 	}
 
@@ -79,8 +92,223 @@ rummy.showPage = function() {
 				title = "Rummy " + title;
 			}
 			$('title').text(title);
+
+			if(pageName == '#scoreCard'){
+				rummy.showDrillDownGraph();
+			}
 		});
 
+};
+
+rummy.getPlayerNames = function () {
+	var playerNames = [],
+		players = rummy.model.players,
+		playersLength = players.length,
+		i;
+
+	for (i = 0; i < playersLength; i++) {
+		player = players[i];
+		playerNames.push(player.name);
+	}
+
+	return playerNames;
+};
+
+rummy.getRoundData = function () {
+	var series = [],
+		rounds = rummy.model.rounds,
+		roundsLength = rounds.length,
+		i, j,
+		scores = [];
+
+	for (i = 0; i < roundsLength; i++) {
+		scores = rounds[i].join(" ").split(" ");
+		for(j=0; j<scores.length; j++) { scores[j] = +scores[j]; } 
+		series.push({
+			'name': 'Round '+ (i+1), 
+			'data': scores
+		});
+	}
+
+	return series;
+};
+
+rummy.getPlayerNameAndTotals = function () {
+	var series = [],
+		data,
+		players = this.model.players,
+		playersLength = players.length,
+		i;
+
+	for (i = 0; i < playersLength; i++) {
+		data = {};
+		data.name = players[i].name;
+		data.y = players[i].totalScore;
+		data.drilldown = players[i].name;
+		series.push(data);
+	}
+
+	return series;
+};
+
+rummy.getPlayerAndRoundData = function () {
+	var series = [],
+		dataPoint = {},
+		players = this.model.players,
+		playersLength = players.length,
+		i, 
+		j,
+		rounds,
+		roundsLength,
+		roundDataPoint;
+
+	for (i = 0; i < playersLength; i++) {
+		dataPoint = {};
+		dataPoint.id = players[i].name;
+		dataPoint.data = [];
+		rounds = players[i].rounds;
+		roundsLength = rounds.length
+		for (j = 0; j < roundsLength; j++) {
+			roundDataPoint = [];
+			roundDataPoint[0] = 'Round ' + (j+1);
+			roundDataPoint[1] = +rounds[j];
+			dataPoint.data.push(roundDataPoint);
+		};
+		series.push(dataPoint);
+	}
+
+	return series;
+};
+
+rummy.showDrillDownGraph = function(){
+
+	var playerNameAndTotal = this.getPlayerNameAndTotals(),
+		playerAndRoundData = this.getPlayerAndRoundData();
+
+	rummy.log(playerNameAndTotal);
+	rummy.log(playerAndRoundData);
+
+	Highcharts.setOptions({
+        lang: {
+            drillUpText: '<< Player Scores'
+        }
+    });
+
+    // Create the chart
+    $('#graphContainer').highcharts({
+        chart: {
+            type: 'column'
+        },
+        
+        title: {
+            text: ''
+        },
+
+        xAxis: {
+            type: 'category'
+        },
+
+        legend: {
+            enabled: false
+        },
+
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true
+                }
+            }
+        },
+
+        series: [{
+            name: 'Total',
+            colorByPoint: true,
+            data: playerNameAndTotal
+        }],
+
+        drilldown: {
+            drillUpButton: {
+                relativeTo: 'spacingBox',
+                position: {
+                    y: 0,
+                    x: 0
+                },
+                theme: {
+                    fill: 'white',
+                    'stroke-width': 1,
+                    stroke: 'silver',
+                    r: 0,
+                    states: {
+                        hover: {
+                            fill: '#bada55'
+                        },
+                        select: {
+                            stroke: '#039',
+                            fill: '#bada55'
+                        }
+                    }
+                }
+
+            },
+            series: playerAndRoundData
+        }
+    });
+};
+
+rummy.showBarGraph = function(){
+	rummy.log("Showing Graph");
+
+	var playerNames = rummy.getPlayerNames(),
+		roundData = rummy.getRoundData();
+
+	rummy.log(playerNames);
+	rummy.log(roundData);
+
+	$('#graphContainer').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+            categories: playerNames
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Scores'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+                }
+            }
+        },
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.x + '</b><br/>' +
+                    this.series.name + ': ' + this.y + '<br/>' +
+                    'Total: ' + this.point.stackTotal;
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black'
+                    }
+                }
+            }
+        },
+        series: roundData
+    });
 };
 
 rummy.updateScores = function(){
@@ -90,7 +318,7 @@ rummy.updateScores = function(){
 
 	for (i = 0; i < playersLength; i++) {
 		player = players[i];
-		console.log("Updating Player "+ player.name);
+		rummy.log("Updating Player "+ player.name);
 		rummy.updateDrops(player);
 	};
 };
@@ -111,14 +339,14 @@ rummy.updateDrops = function(player) {
 	player.dropsLeft = (player.dropsLeft < 0) ? 0 : player.dropsLeft;
 	player.middleDropsLeft = (player.middleDropsLeft < 0) ? 0 : player.middleDropsLeft;
 
-	console.log("Player: " + player.name);
-	console.log(player);
+	rummy.log("Player: " + player.name);
+	rummy.log(player);
 }
 
 rummy.sumScores = function(scores){
 	if(scores && scores.length > 0){
 		var evalString = scores.join('+');
-		console.log("Evaluating "+evalString);
+		rummy.log("Evaluating "+evalString);
 		return eval(evalString);
 	}
 	return 0;
@@ -141,11 +369,11 @@ rummy.addRoundScores = function(roundScores){
 	this.model.roundNumber = this.model.rounds.length;
 
 	for (i = 0; i < playersLength; i++) {
-		console.log(roundScores[i])
+		rummy.log(roundScores[i])
 		players[i].rounds.push(roundScores[i]);
 		players[i].totalScore = rummy.sumScores(players[i].rounds);
-		console.log("Player Round");
-		console.log(players[i].rounds);
+		rummy.log("Player Round");
+		rummy.log(players[i].rounds);
 	};
 };
 
@@ -195,7 +423,7 @@ rummy.getFBFriendLists = function(name){
 	FB.api(
 	    "/me/friendlists",
 	    function (response) {
-	    	console.log(response);
+	    	rummy.log(response);
 	      	if (response && !response.error) {
 	        /* handle the result */
 	      	}
@@ -204,9 +432,9 @@ rummy.getFBFriendLists = function(name){
 };
 
 rummy.addPlayer = function(player){
-	console.log("Adding new player " + player.name);
+	rummy.log("Adding new player " + player.name);
 	if(rummy.model.gameInProgress) {
-		console.log("Game is currently in progress. Retrieving active player round score who has the max totalScore");
+		rummy.log("Game is currently in progress. Retrieving active player round score who has the max totalScore");
 		player.rounds = rummy.getNewReentryPlayersRoundScores();
 		player.totalScore = rummy.sumScores(player.rounds);
 		rummy.updateDrops(player);
@@ -244,7 +472,7 @@ rummy.getNewReentryPlayersRoundScores = function(){
 	}
 
 	if(rounds && rounds.length > 0) {
-		console.log("Incrementing the last round score by 1 ");
+		rummy.log("Incrementing the last round score by 1 ");
 		lastRoundScore = +rounds[rounds.length - 1];
 		rounds[rounds.length - 1] = (lastRoundScore + 1) + "";
 	}
@@ -257,7 +485,7 @@ rummy.removePlayer = function(index){
 		roundsLength = rounds.length,
 		i;
 
-	console.log("Removing player " + rummy.model.players[index]);
+	rummy.log("Removing player " + rummy.model.players[index].name);
 
 	for (var i = 0; i < roundsLength; i++) {
 		rounds[i].splice(index, 1);
@@ -276,7 +504,7 @@ rummy.removePlayer = function(index){
 };
 
 rummy.reEnterPlayer = function(index) {
-	console.log("Re entering player " + rummy.model.players[index]);
+	rummy.log("Re entering player " + rummy.model.players[index]);
 	var name = rummy.model.players[index].name
 		player = {'name': name};
 	this.removePlayer(index);
@@ -349,7 +577,7 @@ rummy.bindEvents = function() {
 				  	if (response.status === 'connected') {
 				    	rummy.fb.userId = response.authResponse.userID;
 				    	rummy.fb.accessToken = response.authResponse.accessToken;
-				    	console.log('User['+rummy.fb.userId+'] is logged into facebook.');
+				    	rummy.log('User['+rummy.fb.userId+'] is logged into facebook.');
 				    	/* make the API call */
 						FB.api('/me', function(response) {
 							rummy.model.players.push(response.name);
@@ -357,7 +585,7 @@ rummy.bindEvents = function() {
 							window.location.hash = '#players';
 						});
 				  	} else {
-				  		console.log('You are currently not logged in to facebook.');
+				  		rummy.log('You are currently not logged in to facebook.');
 				  		window.location.hash = '#loginToFB';
 				  	}
 				});
@@ -373,10 +601,10 @@ rummy.bindEvents = function() {
 		$page.on('click', '#loginToFB button.cta', function(){
 			FB.login(function(response) {
 			   if (response.authResponse) {
-			   		console.log('Welcome!  Fetching your information.... ');
+			   		rummy.log('Welcome!  Fetching your information.... ');
 			     	window.location.hash = '#newGame';
 			   } else {
-			   		console.log('User cancelled login or did not fully authorize.');
+			   		rummy.log('User cancelled login or did not fully authorize.');
 			   		//TODO handle this scenario
 			   }
 			});
@@ -398,8 +626,8 @@ rummy.bindEvents = function() {
 	$page.on('submit', 'form[name=saveRoundScore]', function(e){
 		e.preventDefault();
 		var data = $(this).serializeObject();
-		console.log("Saving round score");
-		console.log(data.roundScores);
+		rummy.log("Saving round score");
+		rummy.log(data.roundScores);
 		rummy.addRoundScores(data.roundScores);
 		rummy.saveModel();
 		if(rummy.isThereAWinner()){
@@ -423,7 +651,7 @@ rummy.bindEvents = function() {
 
 	$page.on('click', '#js-abandon', function(e){
 		e.preventDefault();
-		console.log("Abandoning current game");
+		rummy.log("Abandoning current game");
 		rummy.resetScores();
 		if(rummy.model.players.length < 2){ 
 			window.location.hash = '#players'
@@ -432,13 +660,20 @@ rummy.bindEvents = function() {
 		}
 	});
 
-	$box.on('click', 'ul.hamburger', function(){
+	$box.on('click', 'ul.hamburger', function(e){
+		e.stopPropagation();
 		$box.toggleClass('menu-open');
 		if(hashMenuOpen == undefined){
 			hashMenuOpen = window.location.hash;
 			window.location.hash = '#menu';
 		}else{
 			hashMenuOpen = undefined;
+		}
+	});
+
+	$('body').on('click', function(){
+		if($box.hasClass('menu-open')){
+			$box.removeClass('menu-open');
 		}
 	});
 

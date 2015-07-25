@@ -7,7 +7,13 @@ module.exports = function(grunt) {
       dist: {
         files: {
           'target/js/<%= pkg.name %>.js': ['target/js/templates.js', 'src/scripts/**/*.js'],
-          'target/js/vendor.js': ['src/vendor/scripts/**/*.js']
+          'target/js/vendor.js': [
+            'src/vendor/scripts/js.cookie.js',
+            'src/vendor/scripts/jquery-2.1.4.min.js',
+            'src/vendor/scripts/handlebars-v3.0.3.js',
+            'src/vendor/scripts/highcharts.js',
+            'src/vendor/scripts/drilldown.js'
+          ]
         }
       }
     },
