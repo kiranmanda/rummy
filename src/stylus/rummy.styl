@@ -174,39 +174,40 @@ button {
 	width:100%;
 	transition(all 0.3s ease);
 	max-width: 350px;
-}
 
-button:hover {
-	background-color: #db3a1b;
-	cursor: pointer;
-}
+	&:hover {
+		background-color: #db3a1b;
+		cursor: pointer;
+	}
 
-button:active {
-	background-color: #e85c41;
+	&:active {
+		background-color: #e85c41;
+	}
+
+	&.remove,
+	&.re-enter {
+		background-color: #dc3847;
+		font-size: 12px;
+		margin: 5px;
+		padding: 3px 5px;
+		float: right;
+		width: auto;
+		border-radius: 2px;
+		text-transform: none;
+	}
+
+	&.re-enter {
+		background-color: #e85c41;
+	}
+
+	&.remove:hover {
+		background-color: #ED4958;
+	}
 }
 
 button[disabled="disabled"].disabled, button[disabled="disabled"].disabled:hover {
 	background-color: #AAA;
 	cursor: default;
-}
-
-button.remove, button.re-enter {
-	background-color: #dc3847;
-	font-size: 12px;
-	margin: 5px;
-	padding: 3px 5px;
-	float: right;
-	width: auto;
-	border-radius: 2px;
-	text-transform: none;
-}
-
-button.re-enter {
-	background-color: #e85c41;
-}
-
-button.remove:hover {
-	background-color: #ED4958;
 }
 
 .back {

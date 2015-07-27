@@ -397,12 +397,22 @@ rummy.resetScores = function(){
 
 rummy.saveModel = function() {
 	// Put the object into storage
-	localStorage.setItem(modelKey, JSON.stringify(this.model));
+	if(localStorage == undefined){
+		Cookies.set(modelKey, JSON.stringify(this.model));
+	}else{
+		localStorage.setItem(modelKey, JSON.stringify(this.model));
+	}
 };
 
 rummy.getModel = function() {
+	var retrievedModel;
+	if(localStorage == undefined){
+		retrievedModel = Cookies.get(modelKey);
+	}else{
+		retrievedModel = localStorage.getItem(modelKey);
+	}
 	// Retrieve the object from storage
-	var retrievedModel = localStorage.getItem(modelKey);
+	
 	if(retrievedModel){
 		return JSON.parse(retrievedModel);
 	}
