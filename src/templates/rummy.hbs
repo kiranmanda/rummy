@@ -105,7 +105,7 @@
 	<div id="graphContainer"></div>
 	<br/>
 	<button class="cta js-hash" data-hash="#roundScore">Enter Scores</button>
-	<p><a href="#scoreCard">Show Table View</a></p>
+	<p><a href="#scoreCard">Show Table View</a> | <a href="#players">Add/Re-enter Player</a></p>
 </div>
 
 <!-- Score Card Page Template -->
@@ -208,7 +208,7 @@
 		</table>
 	{{/ifCond}}
 	<button class="cta js-hash" data-hash="#roundScore">Enter Scores</button>
-	<p><a href="#scoreCardGraph">Show Graph View</a></p>
+	<p><a href="#scoreCardGraph">Show Graph View</a> | <a href="#players">Add/Re-enter Player</a></p>
 </div>
 
 <!-- Round Score Page Template -->
@@ -256,16 +256,17 @@
 		<button class="cta" >Save Game Settings</button>
 	</form>
 	{{#if gameInProgress}}
-		<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
+		<br/><button class="cta js-hash" data-hash="#scoreCard">Back to Score Card</button>
 	{{else}}
 		{{#ifCond players.length 'gt' 1}}
 			{{#if winner}}
-				<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
+				<br/><button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
 			{{else}}
 				<br /><form name="newGame"><button class="cta">Start Game</button></form>
 			{{/if}}
 		{{/ifCond}}
 	{{/if}}
+	<p><a href="#reset">Reset to Defaults</a></p>
 </div>
 
 <!-- Winner Page Template -->
@@ -276,6 +277,15 @@
 	<button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
 </div>
 
+<!-- Reset Page Template -->
+<div id="reset" class="page">
+	<h1>Are you sure?</h1>
+	<p>Resetting will remove all the game data and player data. This step is not reversable.</p>
+	<br />
+	<button class="cta" id="js-startOver">Yes! Start Over</button>
+</div>
+
+<!-- About Page Template-->
 <div id="about" class="page">
 	<h1>About</h1>
 	<h3>Founders</h3>
