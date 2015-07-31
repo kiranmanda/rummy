@@ -383,6 +383,7 @@ rummy.addRoundScores = function(roundScores){
 
 rummy.resetScores = function(){
 	this.model.rounds = [];
+	this.model.roundNumber = 1;
 	var players = this.model.players,
 		playersLength = players.length,
 		i;
@@ -456,7 +457,7 @@ rummy.addPlayer = function(player){
 		rummy.updateDrops(player);
 		rummy.updateRoundScoresForNewPlayer(player.rounds);
 	}
-
+	player.inRound = rummy.model.roundNumber;
 	rummy.model.players.push(player);
 	rummy.saveModel();
 	rummy.showPage();
@@ -488,12 +489,28 @@ rummy.getNewReentryPlayersRoundScores = function(){
 	}
 
 	if(rounds && rounds.length > 0) {
-		rummy.log("Incrementing the last round score by 1 ");
-		lastRoundScore = +rounds[rounds.length - 1];
-		rounds[rounds.length - 1] = (lastRoundScore + 1) + "";
+		if(!rummy.isAnotherPlayerAddedInThisRound()){
+			rummy.log("Incrementing the last round score by 1 ");
+			lastRoundScore = +rounds[rounds.length - 1];
+			rounds[rounds.length - 1] = (lastRoundScore + 1) + "";
+		}else{
+			rummy.log("A player already added or re-enetered in this round. So total score is same as the last person's score.");
+		}
 	}
 
 	return rounds;
+};
+
+rummy.isAnotherPlayerAddedInThisRound = function() {
+	var players = this.model.players,
+		playersLength = players.length,
+		i;
+	for (i = 0; i < playersLength; i++) {
+		if(rummy.model.roundNumber == players[i].inRound){
+			return true;
+		}
+	}
+	return false;
 };
 
 rummy.removePlayer = function(index){
