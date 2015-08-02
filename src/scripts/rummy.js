@@ -8,6 +8,8 @@ var rummy =  rummy || {},
 
 rummy.fb = {};
 
+rummy.hasHTML5Support = (typeof document.createElement('input').checkValidity === 'function');
+
 rummy.log = function(msg) {
 	if(log){
 		console.log(msg);
@@ -515,6 +517,24 @@ rummy.isThereAWinner = function() {
 	return false;
 };
 
+rummy.safariPolyFill = function(obj) {
+	if(rummy.hasHTML5Support){
+		if (!obj.checkValidity()) {
+	      $(obj).addClass('invalid');
+	      var message = $('.invalid input:required:invalid').attr('title');
+	      $('#js-message').html(message).show();
+	      rummy.log(message);
+	      setTimeout(function(){
+	      	$('#js-message').fadeOut();
+	      }, 3000);
+	      return false;
+	    } else {
+	      $(this).removeClass('invalid');
+	    }
+	}
+	return true;
+}
+
 rummy.bindEvents = function() {
 	
 	var hashMenuOpen = undefined;
@@ -538,6 +558,7 @@ rummy.bindEvents = function() {
 
 	$page.on('submit', 'form[name="scoreSettings"]', function(e){
 		e.preventDefault();
+		if(!rummy.safariPolyFill(this)) return;
 		rummy.model.settings = $(this).serializeObject();
 		rummy.saveModel();
 		var $button = $(this).find('button');
@@ -597,12 +618,14 @@ rummy.bindEvents = function() {
 
 	$page.on('submit', 'form[name="addPlayer"]', function(e){
 		e.preventDefault();
+		if(!rummy.safariPolyFill(this)) return;
 		var data = $(this).serializeObject();
 		rummy.addPlayer(data);
 	});
 
 	$page.on('submit', 'form[name=saveRoundScore]', function(e){
 		e.preventDefault();
+		if(!rummy.safariPolyFill(this)) return;
 		var data = $(this).serializeObject();
 		rummy.log("Saving round score");
 		rummy.log(data.roundScores);

@@ -106,7 +106,27 @@ input {
 	border:1px solid #CCC;
 	padding: 10px;
 	width: 100%;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
 	font-size: 14px;
+}
+
+.invalid input:required:invalid{
+	border: 1px solid #FF0000;
+}
+
+.message {
+    position: absolute;
+    text-align: center;
+    width: 350px;
+    top: 0;
+    background-color: #39A0BB;
+    padding: 20px 40px;
+    left: 0;
+    color: #fff;
+    z-index: 1;
+    display: none;
 }
 
 label {
