@@ -56,8 +56,10 @@ rummy.isScoreCardView = function () {
 };
 
 rummy.showPage = function() {
-	var pageName = window.location.hash,
-		animationDelay = 400;	
+	var pages = window.location.hash,
+		animationDelay = 400,
+		parts = pages.split("/"),
+		pageName = parts[0];
 
 	/* Unknown pageName reset to intro */
 	if($.inArray(pageName, rummy.pages) == -1) {
@@ -75,6 +77,19 @@ rummy.showPage = function() {
 	if(rummy.isScoreCardView() && rummy.model.players.length < 2){
 		window.location.hash = "#players";
 		return;
+	}
+
+	if(pageName === '#roundScore'){
+		if(parts.length == 2){
+			rummy.model.editRound = +parts[1] - 1;
+			if(rummy.model.editRound >= rummy.model.rounds.length) {
+				rummy.log("You are trying to edit a round even before entering the round score. Showind score card");
+				window.location.hash = "#scoreCard";
+			}
+		}else{
+			rummy.model.editRound = undefined;
+		}
+		
 	}
 
 	/*Update scores*/
@@ -210,8 +225,10 @@ rummy.showDrillDownGraph = function(){
             type: 'category'
         },
 
-        title: {
-            text: 'Scores'
+        yAxis: {
+            title: {
+            	text: ''
+            }
         },
 
         legend: {
@@ -316,12 +333,21 @@ rummy.addRoundScores = function(roundScores){
 		i,
 		evalString;
 
-	this.model.rounds.push(roundScores);
+	if(this.model.editRound >= 0){
+		this.model.rounds[this.model.editRound] = roundScores;
+	}else{
+		this.model.rounds.push(roundScores);
+	}
+
 	this.model.roundNumber = this.model.rounds.length;
 
 	for (i = 0; i < playersLength; i++) {
 		rummy.log(roundScores[i])
-		players[i].rounds.push(roundScores[i]);
+		if(this.model.editRound >= 0){
+			players[i].rounds[this.model.editRound] = roundScores[i];
+		}else{
+			players[i].rounds.push(roundScores[i]);
+		}
 		players[i].totalScore = rummy.sumScores(players[i].rounds);
 		rummy.log("Player Round");
 		rummy.log(players[i].rounds);
@@ -523,6 +549,7 @@ rummy.safariPolyFill = function(obj) {
 	      $(obj).addClass('invalid');
 	      var message = $('.invalid input:required:invalid').attr('title');
 	      $('#js-message').html(message).show();
+	      window.scrollTo(0,0);
 	      rummy.log(message);
 	      setTimeout(function(){
 	      	$('#js-message').fadeOut();

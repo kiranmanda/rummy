@@ -134,7 +134,10 @@
 					<table>
 						<tr>
 							{{#each rounds}}
-								<td><span class="round">{{inc @index}}</span></td>
+								<td>
+									<a href="#roundScore/{{inc @index}}" class="round">{{inc @index}}</a><br/>
+									<a href="#roundScore/{{inc @index}}" class="edit">Edit</a>
+								</td>
 							{{/each}}
 							<td class="total">T</td>
 						</tr>
@@ -151,7 +154,10 @@
 					<table class="nameTable">
 						<tr>
 							{{#each rounds}}
-								<td><span class="round">{{inc @index}}</span></td>
+								<td>
+									<a href="#roundScore/{{inc @index}}" class="round">{{inc @index}}</a><br/>
+									<a href="#roundScore/{{inc @index}}" class="edit">Edit</a>
+								</td>
 							{{/each}}
 						</tr>
 						{{#each players}}
@@ -191,7 +197,10 @@
 			</tr>
 			{{#each rounds}}
 				<tr>
-					<td class="small"><span class="round">{{inc @index}}</span></td>
+					<td class="small">
+						<a href="#roundScore/{{inc @index}}" class="round">{{inc @index}}</a><br/>
+						<a href="#roundScore/{{inc @index}}" class="edit">Edit</a>
+					</td>
 					{{#each this}}
 						<td>{{this}}</td>
 					{{/each}}
@@ -213,17 +222,35 @@
 
 <!-- Round Score Page Template -->
 <div id="roundScore" class="page">
-	<h1>Round {{inc rounds.length}} Scores</h1>
-	<form name="saveRoundScore">
-		{{#each players}}
-			{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
-				<input type="hidden" name="roundScores" value="0" />
-			{{else}}
-				<input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="Enter {{this.name}}'s Score" maxLength="2"/>
-			{{/ifCond}}
+	{{#ifCond editRound "gteq" 0}}
+		<h1>Edit Round {{inc editRound}} Scores</h1>
+		<form name="saveRoundScore">
+			{{#each players}}
+			<div>
+				<label>Enter {{this.name}}'s Score:</label>
+				{{#each rounds}}
+					{{#ifCond ../../editRound "eq" @index}}
+						<input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="{{this}}" required="required" maxLength="2"/>
+					{{/ifCond}}
+				{{/each}}
+			</div>
 			{{/each}}
 			<button class="cta">Save</button>
-	</form>
+		</form>
+	{{else}}
+		<h1>Round {{inc rounds.length}} Scores</h1>
+		<form name="saveRoundScore">
+			{{#each players}}
+				{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
+					<input type="hidden" name="roundScores" value="0" />
+				{{else}}
+					<input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="Enter {{this.name}}'s Score" maxLength="2"/>
+				{{/ifCond}}
+			{{/each}}
+			<button class="cta">Save</button>
+		</form>
+	{{/ifCond}}
+	
 	<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
 </div>
 
@@ -284,20 +311,19 @@
 
 <!-- About Page Template-->
 <div id="about" class="page">
-	<h1>About</h1>
-	<h3>Founders</h3>
-	<ul>
-		<li>Kiran Manda - <a href="http://www.kiranmanda.com">http://www.kiranmanda.com</a></li>
-		<li>Pradeep Yalamanchili</li>
-	</ul>
-	<h3>Our Story - For the LOVE of rummy</h3>
+	<h1>Our Story</h1>
+	<h3>For the LOVE of rummy</h3>
 	<p>
 		Pradeep my friend is a big fan of rummy. He plays this card game with his fellow rummy enthusiasts. One day he floated this idea about score tracking while playing the game. We brainstormed some ideas and quickly put together this single page web application. We hope you like this.
 	</p>
 	<p>
 		This web application uses browser's local storage to store data. Certain browsers may not support local storage in private browsing.
 	</p>
-
+	<p>
+		Best,<br/>
+		<a href="http://www.kiranmanda.com">Kiran Manda</a><br />
+		<a>Pradeep Yalamanchili</a>
+	</p>
 </div>
 
 <!-- Terms and Conditions Page Template -->

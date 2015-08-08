@@ -240,11 +240,11 @@ table {
 }
 
 th {
-	background-color: #B3B3B3;
+	background-color: transparent;
 	color: #000;
 }
 
-tr:nth-child(odd) {
+tr:nth-child(even) {
     background-color: #F1F1F1;
 }
 
@@ -267,13 +267,23 @@ td, th {
     text-align: center;
     line-height: 20px;
     font-size: 10px;
+    text-decoration: none;
+    &:hover{
+    	background-color: #e85c41;
+    }
+}
+
+.edit{
+	font-size: 9px;
+	font-weight: bold;
+	text-transform: uppercase;
 }
 
 table {
 	margin: 20px auto;
 }
 
-form[name='scoreSettings'] > div {
+form[name='scoreSettings'] > div, form[name='saveRoundScore'] > div {
 	text-align: left;
 	margin-bottom: 10px;
 }
@@ -382,7 +392,7 @@ ol li {
 			margin: 0;
 			padding: 0;
 		}
-		tr:nth-child(odd) {
+		tr:nth-child(even) {
 		    background-color: transparent;
 		}
 	}
@@ -416,9 +426,10 @@ ol li {
 	}
   	#box {
     	border: 0 none;
+    	border-radius: 0;
     	margin: 0;
     	width: auto;
-    	min-height: auto;
+    	min-height: 440px;
     	padding: 20px;
   	}
 }
