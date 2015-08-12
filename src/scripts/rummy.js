@@ -566,7 +566,7 @@ rummy.showMessage = function(message){
 	rummy.log(message);
 	setTimeout(function(){
 		$('#js-message').fadeOut();
-	}, 4000);
+	}, 3500);
 };
 
 rummy.safariPolyFill = function(obj) {
@@ -675,6 +675,10 @@ rummy.bindEvents = function() {
 		e.preventDefault();
 		if(!rummy.safariPolyFill(this)) return;
 		var data = $(this).serializeObject();
+
+		//Check to see if there is more than one active player with O value. If so throw an error.
+
+
 		rummy.log("Saving round score");
 		rummy.log(data.roundScores);
 		rummy.addRoundScores(data.roundScores);
@@ -729,6 +733,31 @@ rummy.bindEvents = function() {
 		}
 		rummy.initModel();
 		window.location.hash = "#intro";
+	});
+
+	$box.on('keyup keypress blur change', 'form[name="saveRoundScore"] input.number', function(e){
+		var numberOfZeroScores = 0,
+			$form = $(this).closest("form"),
+			returnSilent = false;
+
+		$form.find('input.number').each(function(){
+			if($(this).val() === "0"){
+				numberOfZeroScores++;
+			}else if($(this).val() === ""){
+				returnSilent = true;
+			}
+		});
+
+		if(returnSilent) return;
+
+		if(numberOfZeroScores !== 1){
+			rummy.showMessage("One and only one player can win a round.");
+			$form.find('button').addClass("disabled").attr("disabled","disabled");
+		}else{
+			$form.find('button').removeClass("disabled").removeAttr("disabled");
+			$('#js-message').fadeOut();
+		}
+
 	});
 
 	$('body').on('click', function(){
