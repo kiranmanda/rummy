@@ -421,8 +421,25 @@ rummy.getFBFriendLists = function(name){
 	);
 };
 
+rummy.isPlayerNameTaken = function(name){
+	var i = 0,
+		len = this.model.players.length;
+	for (i = 0; i < len; i++) {
+		if(this.model.players[i].name === name){
+			return true;
+		}
+	};
+	return false;
+};
+
 rummy.addPlayer = function(player){
 	rummy.log("Adding new player " + player.name);
+	if(rummy.isPlayerNameTaken(player.name)){
+		rummy.log("Player " + player.name + " taken");
+		rummy.showMessage("Duplicate Player Name. Choose a different name.");
+		return;
+	}
+
 	if(rummy.model.gameInProgress) {
 		rummy.log("Game is currently in progress. Retrieving active player round score who has the max totalScore");
 		player.rounds = rummy.getNewReentryPlayersRoundScores();
@@ -543,17 +560,21 @@ rummy.isThereAWinner = function() {
 	return false;
 };
 
+rummy.showMessage = function(message){
+	$('#js-message').html(message).show();
+	window.scrollTo(0,0);
+	rummy.log(message);
+	setTimeout(function(){
+		$('#js-message').fadeOut();
+	}, 4000);
+};
+
 rummy.safariPolyFill = function(obj) {
 	if(rummy.hasHTML5Support){
 		if (!obj.checkValidity()) {
 	      $(obj).addClass('invalid');
 	      var message = $('.invalid input:required:invalid').attr('title');
-	      $('#js-message').html(message).show();
-	      window.scrollTo(0,0);
-	      rummy.log(message);
-	      setTimeout(function(){
-	      	$('#js-message').fadeOut();
-	      }, 3000);
+	      rummy.showMessage(message);
 	      return false;
 	    } else {
 	      $(this).removeClass('invalid');
