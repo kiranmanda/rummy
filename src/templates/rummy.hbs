@@ -141,7 +141,9 @@
 									</td>
 								{{/each}}
 								{{#unless winner}}
-									<td class="center"><a class="round">{{inc rounds.length}}</a><br/>&nbsp;</td>
+									<td class="center">
+										<a class="round">{{inc rounds.length}}</a><br/>&nbsp;
+									</td>
 								{{/unless}}
 								<td class="total">T</td>
 							</tr>
@@ -150,15 +152,15 @@
 									{{#each this.rounds}}
 										<td>{{this}}</td>
 									{{/each}}
-									{{#unless ../winner}}
-									<td>
-										{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
-											<input type="hidden" name="roundScores" value="0" />
-										{{else}}
-											<input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="{{this.name}}" maxLength="2" style="width:40px;"/>
-										{{/ifCond}}
-									</td>
-									{{/unless}}
+									{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
+										{{#unless ../../winner}}
+											<td><input type="hidden" name="roundScores" value="0" /></td>
+										{{/unless}}
+									{{else}}
+										{{#unless ../../winner}}
+											<td><input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="{{this.name}}" maxLength="2" style="width:40px;"/></td>
+										{{/unless}}
+									{{/ifCond}}
 									<td class="total"><b>{{this.totalScore}}</b></td>
 		    					</tr>
 		  					{{/each}}
@@ -174,7 +176,7 @@
 								{{/each}}
 								{{#unless winner}}
 								<td class="center">
-									<a class="round">{{inc rounds.length}}<br/>&nbsp;</a>
+									<a class="round">{{inc rounds.length}}</a><br/>&nbsp;
 								</td>
 								{{/unless}}
 							</tr>
@@ -183,15 +185,15 @@
 									{{#each this.rounds}}
 										<td>{{this}}</td>
 									{{/each}}
-									{{#unless ../winner}}
-									<td>
-										{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
-											<input type="hidden" name="roundScores" value="0" />
-										{{else}}
-											<input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="{{this.name}}" maxLength="2" style="width:40px;"/>
-										{{/ifCond}}
-									</td>
-									{{/unless}}
+									{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
+										{{#unless ../../winner}}
+											<td><input type="hidden" name="roundScores" value="0" /></td>
+										{{/unless}}
+									{{else}}
+										{{#unless ../../winner}}
+											<td><input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="{{this.name}}" maxLength="2" style="width:40px;"/></td>
+										{{/unless}}
+									{{/ifCond}}
 		    					</tr>
 		  					{{/each}}
 						</table>
@@ -235,7 +237,9 @@
 				{{/each}}
 				{{#unless winner}}
 				<tr>
-					<td class="small"><a class="round">{{inc rounds.length}}</a></td>
+					<td class="small">
+						<a class="round">{{inc rounds.length}}</a>
+					</td>
 					{{#each players}}
 					<td>
 						{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
