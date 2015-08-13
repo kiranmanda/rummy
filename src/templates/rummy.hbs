@@ -111,112 +111,156 @@
 <!-- Score Card Page Template -->
 <div id="scoreCard" class="page scoreCard">
 	<h1>Score Card</h1>
-	{{#ifCond players.length 'gt' 4}}
-		<div class="tables">
-			<table class="nameTable">
+	<form name="saveRoundScore">
+		{{#ifCond players.length 'gt' 4}}
+			<div class="tables">
+				<table class="nameTable">
+					<tr>
+						<th></th>
+					</tr>
+					{{#each players}}
+						<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
+							<th>
+								<div class="name">{{this.name}}</div>
+								<div class="small">
+									<em>D:</em> {{this.dropsLeft}},
+									<em>M:</em> {{this.middleDropsLeft}}
+								</div>
+							</th>
+						</tr>
+					{{/each}}
+				</table>
+				<div class="tableBox">
+					{{#ifCond roundNumber 'gteq' 4}}
+						<table>
+							<tr>
+								{{#each rounds}}
+									<td>
+										<a href="#roundScore/{{inc @index}}" class="round">{{inc @index}}</a><br/>
+										<a href="#roundScore/{{inc @index}}" class="edit">Edit</a>
+									</td>
+								{{/each}}
+								{{#unless winner}}
+									<td class="center"><a class="round">{{inc rounds.length}}</a><br/>&nbsp;</td>
+								{{/unless}}
+								<td class="total">T</td>
+							</tr>
+							{{#each players}}
+		    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
+									{{#each this.rounds}}
+										<td>{{this}}</td>
+									{{/each}}
+									{{#unless ../winner}}
+									<td>
+										{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
+											<input type="hidden" name="roundScores" value="0" />
+										{{else}}
+											<input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="{{this.name}}" maxLength="2" style="width:40px;"/>
+										{{/ifCond}}
+									</td>
+									{{/unless}}
+									<td class="total"><b>{{this.totalScore}}</b></td>
+		    					</tr>
+		  					{{/each}}
+						</table>
+					{{else}}
+						<table class="nameTable">
+							<tr>
+								{{#each rounds}}
+									<td class="center">
+										<a href="#roundScore/{{inc @index}}" class="round">{{inc @index}}</a><br/>
+										<a href="#roundScore/{{inc @index}}" class="edit">Edit</a>
+									</td>
+								{{/each}}
+								{{#unless winner}}
+								<td class="center">
+									<a class="round">{{inc rounds.length}}<br/>&nbsp;</a>
+								</td>
+								{{/unless}}
+							</tr>
+							{{#each players}}
+		    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
+									{{#each this.rounds}}
+										<td>{{this}}</td>
+									{{/each}}
+									{{#unless ../winner}}
+									<td>
+										{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
+											<input type="hidden" name="roundScores" value="0" />
+										{{else}}
+											<input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="{{this.name}}" maxLength="2" style="width:40px;"/>
+										{{/ifCond}}
+									</td>
+									{{/unless}}
+		    					</tr>
+		  					{{/each}}
+						</table>
+						<table class="total">
+							<tr>
+								<td class="center">T</td>
+							</tr>
+							{{#each players}}
+		    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
+									<td><b>{{this.totalScore}}</b></td>
+		    					</tr>
+		  					{{/each}}
+						</table>
+					{{/ifCond}}
+				</div>
+			</div>
+		{{else}}
+			<table border="1" class="vertical">
 				<tr>
-					<th></th>
-				</tr>
-				{{#each players}}
-					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
-						<th>
+					<th width="10"></th>
+					{{#each players}}
+						<th class="small{{#ifCond this.totalScore "gteq" ../settings.gameScore}} strike{{/ifCond}}">
 							<div class="name">{{this.name}}</div>
-							<div class="small">
-								<em>D:</em> {{this.dropsLeft}},
-								<em>M:</em> {{this.middleDropsLeft}}
+							<div class="dropsleft">
+								<span>D:&nbsp;{{this.dropsLeft}}</span>
+								<span>M:&nbsp;{{this.middleDropsLeft}}</span>
 							</div>
 						</th>
-					</tr>
-					{{/each}}
-			</table>
-			<div class="tableBox">
-				{{#ifCond roundNumber 'gteq' 5}}
-					<table>
-						<tr>
-							{{#each rounds}}
-								<td>
-									<a href="#roundScore/{{inc @index}}" class="round">{{inc @index}}</a><br/>
-									<a href="#roundScore/{{inc @index}}" class="edit">Edit</a>
-								</td>
-							{{/each}}
-							<td class="total">T</td>
-						</tr>
-						{{#each players}}
-	    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
-								{{#each this.rounds}}
-									<td>{{this}}</td>
-								{{/each}}
-								<td class="total"><b>{{this.totalScore}}</b></td>
-	    					</tr>
-	  					{{/each}}
-					</table>
-				{{else}}
-					<table class="nameTable">
-						<tr>
-							{{#each rounds}}
-								<td>
-									<a href="#roundScore/{{inc @index}}" class="round">{{inc @index}}</a><br/>
-									<a href="#roundScore/{{inc @index}}" class="edit">Edit</a>
-								</td>
-							{{/each}}
-						</tr>
-						{{#each players}}
-	    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
-								{{#each this.rounds}}
-									<td>{{this}}</td>
-								{{/each}}
-	    					</tr>
-	  					{{/each}}
-					</table>
-					<table class="total">
-						<tr>
-							<td>T</td>
-						</tr>
-						{{#each players}}
-	    					<tr {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
-								<td><b>{{this.totalScore}}</b></td>
-	    					</tr>
-	  					{{/each}}
-					</table>
-				{{/ifCond}}
-			</div>
-		</div>
-	{{else}}
-		<table border="1" class="vertical">
-			<tr>
-				<th width="10"></th>
-				{{#each players}}
-					<th class="small{{#ifCond this.totalScore "gteq" ../settings.gameScore}} strike{{/ifCond}}">
-						<div class="name">{{this.name}}</div>
-						<div class="dropsleft">
-							<span>D:&nbsp;{{this.dropsLeft}}</span>
-							<span>M:&nbsp;{{this.middleDropsLeft}}</span>
-						</div>
-					</th>
-				{{/each}}
-			</tr>
-			{{#each rounds}}
-				<tr>
-					<td class="small">
-						<a href="#roundScore/{{inc @index}}" class="round">{{inc @index}}</a><br/>
-						<a href="#roundScore/{{inc @index}}" class="edit">Edit</a>
-					</td>
-					{{#each this}}
-						<td>{{this}}</td>
 					{{/each}}
 				</tr>
-			{{/each}}
-			<tr class="total">
-				<td class="small">T</td>
-				{{#each players}}
-					<td {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
-						<b>{{this.totalScore}}</b>
-					</td>
+				{{#each rounds}}
+					<tr>
+						<td class="small">
+							<a href="#roundScore/{{inc @index}}" class="round">{{inc @index}}</a><br/>
+							<a href="#roundScore/{{inc @index}}" class="edit">Edit</a>
+						</td>
+						{{#each this}}
+							<td>{{this}}</td>
+						{{/each}}
+					</tr>
 				{{/each}}
-			</tr>
-		</table>
-	{{/ifCond}}
-	<button class="cta js-hash" data-hash="#roundScore">Enter Scores</button>
+				{{#unless winner}}
+				<tr>
+					<td class="small"><a class="round">{{inc rounds.length}}</a></td>
+					{{#each players}}
+					<td>
+						{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
+							<input type="hidden" name="roundScores" value="0" />
+						{{else}}
+							<input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="{{this.name}}" maxLength="2"/>
+						{{/ifCond}}
+					</td>
+					{{/each}}
+				</tr>
+				{{/unless}}
+				<tr class="total">
+					<td class="small">T</td>
+					{{#each players}}
+						<td {{#ifCond this.totalScore "gteq" ../settings.gameScore}}class="strike"{{/ifCond}}>
+							<b>{{this.totalScore}}</b>
+						</td>
+					{{/each}}
+				</tr>
+			</table>
+		{{/ifCond}}
+		{{#unless winner}}
+			<button class="cta" type="submit">Save Round Score</button>
+		{{/unless}}
+	</form>
 	<p><a href="#scoreCardGraph">Show Graph View</a> | <a href="#players">Add/Re-enter Player</a></p>
 </div>
 
@@ -322,13 +366,13 @@
 	<p>
 		Also, this is an Ad free service. It costs money to keep this service up. If you like this please donate.<br/>
 		
-			<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-				<input type="hidden" name="cmd" value="_s-xclick">
-				<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----MIIHLwYJKoZIhvcNAQcEoIIHIDCCBxwCAQExggEwMIIBLAIBADCBlDCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20CAQAwDQYJKoZIhvcNAQEBBQAEgYBKzm3N6bGPUQ+tQebf/jf77wKIoG6enaOB9hnEpFrjHn8fvdCB7GYlFa0521Cyq5+j430lE5JmxGjaJ0oYdkGn8KuIlhuQbWVR9iff+ndT3rwbe3XdT2YQGbHTzZW4GDaQ/ACing7XVXcU4ahGLGEq1U1LMRaPg3NAH61IxrBQUTELMAkGBSsOAwIaBQAwgawGCSqGSIb3DQEHATAUBggqhkiG9w0DBwQIeCIqxozz4GOAgYg8F+llE0VHeXVGMddrrPD55d/kp/UJLq5bE3mIGRcaYrWTA9H+B3Q9TR+1mRGPqHyqNsHU0TIgfd9252pKFoe1dazcI5/3PlZm1X8Ae6ZlZvGNIyQ8nGH4FjESx++MmZFoqB6a1I73dhhAIqXXLx2F3XEsoK/dkHh+Ll8C09ewgjLu13ddiRNvoIIDhzCCA4MwggLsoAMCAQICAQAwDQYJKoZIhvcNAQEFBQAwgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tMB4XDTA0MDIxMzEwMTMxNVoXDTM1MDIxMzEwMTMxNVowgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDBR07d/ETMS1ycjtkpkvjXZe9k+6CieLuLsPumsJ7QC1odNz3sJiCbs2wC0nLE0uLGaEtXynIgRqIddYCHx88pb5HTXv4SZeuv0Rqq4+axW9PLAAATU8w04qqjaSXgbGLP3NmohqM6bV9kZZwZLR/klDaQGo1u9uDb9lr4Yn+rBQIDAQABo4HuMIHrMB0GA1UdDgQWBBSWn3y7xm8XvVk/UtcKG+wQ1mSUazCBuwYDVR0jBIGzMIGwgBSWn3y7xm8XvVk/UtcKG+wQ1mSUa6GBlKSBkTCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb22CAQAwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOBgQCBXzpWmoBa5e9fo6ujionW1hUhPkOBakTr3YCDjbYfvJEiv/2P+IobhOGJr85+XHhN0v4gUkEDI8r2/rNk1m0GA8HKddvTjyGw/XqXa+LSTlDYkqI8OwR8GEYj4efEtcRpRYBxV8KxAW93YDWzFGvruKnnLbDAF6VR5w/cCMn5hzGCAZowggGWAgEBMIGUMIGOMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ0ExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC1BheVBhbCBJbmMuMRMwEQYDVQQLFApsaXZlX2NlcnRzMREwDwYDVQQDFAhsaXZlX2FwaTEcMBoGCSqGSIb3DQEJARYNcmVAcGF5cGFsLmNvbQIBADAJBgUrDgMCGgUAoF0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTUwODEwMjAzMjA0WjAjBgkqhkiG9w0BCQQxFgQUhSPqaQ5A3vQFVIaUubUdCmckuJYwDQYJKoZIhvcNAQEBBQAEgYCiz2MdvXCm/KCpQyORm+ibifLL9E5po4eeBKyggAm824tFNvr7pQ8zVYknsZKK0Xrfa0lcLqru1VdKAP2oSUyUXrXaaB9ZDiuuN6B0k9v8vupzM2bz5q5vPaij87vyZ8y/toTmWzJKYo2wDYiQjr1AgWtgbeec+DcvPh5K5Gc68Q==-----END PKCS7-----
-				">
-				<input style="width:auto;" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-			</form>
+		<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+			<input type="hidden" name="cmd" value="_s-xclick">
+			<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+			">
+			<input style="width:auto;" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+			<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+		</form>
 		
 	</p>
 	<p>

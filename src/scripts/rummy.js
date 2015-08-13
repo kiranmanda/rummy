@@ -89,7 +89,8 @@ rummy.showPage = function() {
 		}else{
 			rummy.model.editRound = undefined;
 		}
-		
+	}else{
+		rummy.model.editRound = undefined;
 	}
 
 	/*Update scores*/
@@ -608,6 +609,10 @@ rummy.bindEvents = function() {
 		e.preventDefault();
 		if(!rummy.safariPolyFill(this)) return;
 		rummy.model.settings = $(this).serializeObject();
+		if(!rummy.isThereAWinner()){
+			rummy.model.gameInProgress = true;
+			rummy.model.winner = undefined;
+		}
 		rummy.saveModel();
 		var $button = $(this).find('button');
 		$button.text("Saved");
@@ -686,7 +691,11 @@ rummy.bindEvents = function() {
 		if(rummy.isThereAWinner()){
 			window.location.hash = '#winner';
 		}else{
-			window.location.hash = '#scoreCard';
+			if(window.location.hash === '#scoreCard'){
+				rummy.showPage();
+			}else{
+				window.location.hash = '#scoreCard';
+			}
 		}
 	});
 
