@@ -108,6 +108,19 @@ input {
 	width: 100%;
 	boxSizing(border-box);
 	font-size: 14px;
+	&:focus {
+		outline: none;
+		border: 1px solid #2c9ab7;
+	}
+}
+
+.col {
+	padding:5px;
+	input {
+		width: 28px;
+	    padding: 4px;
+	    font-family: monospace;
+	}
 }
 
 .invalid input:required:invalid{
@@ -271,6 +284,18 @@ td, th {
     line-height: 20px;
     font-size: 10px;
     text-decoration: none;
+    &.drop {
+    	background-color: #69B25B;
+    	&:hover {
+    		background-color: #69B25B;
+    	}
+    }
+    &.middle-drop {
+    	background-color: #FDBD41;
+    	&:hover {
+    		background-color: #FDBD41;
+    	}
+    }
     &:hover{
     	background-color: #e85c41;
     }
@@ -378,7 +403,16 @@ ol li {
 	}
 
 	.strike {
-		text-decoration: line-through;
+		div, span, a, td {
+			text-decoration: line-through;	
+		}
+		.round {
+			color: #000;
+			background-color: transparent;
+			&:hover {
+				background-color: transparent;
+			}
+		}
 	}
 	.tableBox {
 		/*width: calc(100% - 130px);*/
@@ -413,10 +447,21 @@ ol li {
 		.name {
 			width: 50px;
 			font-size: 12px;
-			line-height: 1.5em;
+			line-height: 1.3em;
 		}
 		th {
 			background-color: transparent;
+		}
+	}
+
+	p.legend {
+		text-align: left;
+    	font-size: 10px;
+		a {
+			display: inline-block;
+		    line-height: 10px;
+		    width: 10px;
+		    height: 10px;
 		}
 	}
 }
@@ -427,7 +472,7 @@ ol li {
 
 @media (max-width: 432px) {
 	h1 {
-		font-size: 1.4em;
+		font-size: 1.2em;
 		margin: 5px 0 30px;
 	}
   	#box {

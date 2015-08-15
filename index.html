@@ -26,6 +26,14 @@
 		<link rel="icon" href="images/playing-cards-32-170641.png" sizes="32x32" />
 	</head>
 	<body>
+		<div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.4&appId=405642912973671";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
 		<div id="box">
 			<div class="message" id="js-message"></div>
 			<ul class="hamburger"><li></li><li></li><li></li></ul>
@@ -44,7 +52,7 @@
 			&copy; 2015 P<u>a</u>YK<u>i</u>M <a href="#terms">Terms &amp; Conditions</a>
 		</div>
 		<script type="text/javascript" src="target/js/vendor.min.js" ></script>
-		<script type="text/javascript" src="target/js/rummy.min.js" ></script> 
+		<script type="text/javascript" src="target/js/rummy.js" ></script> 
 		<script type="text/javascript">
 			if(rummy){
 				rummy.init();

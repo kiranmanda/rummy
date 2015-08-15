@@ -123,8 +123,8 @@
 							<th>
 								<div class="name">{{this.name}}</div>
 								<div class="small">
-									<em>D:</em> {{this.dropsLeft}},
-									<em>M:</em> {{this.middleDropsLeft}}
+									<span class="round drop">{{this.dropsLeft}}</span>
+									<span class="round middle-drop">{{this.middleDropsLeft}}</span>
 								</div>
 							</th>
 						</tr>
@@ -158,7 +158,7 @@
 										{{/unless}}
 									{{else}}
 										{{#unless ../../winner}}
-											<td><input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="{{this.name}}" maxLength="2" style="width:40px;"/></td>
+											<td class="col"><input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" maxLength="2" /></td>
 										{{/unless}}
 									{{/ifCond}}
 									<td class="total"><b>{{this.totalScore}}</b></td>
@@ -191,7 +191,7 @@
 										{{/unless}}
 									{{else}}
 										{{#unless ../../winner}}
-											<td><input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="{{this.name}}" maxLength="2" style="width:40px;"/></td>
+											<td class="col"><input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" maxLength="2" /></td>
 										{{/unless}}
 									{{/ifCond}}
 		    					</tr>
@@ -218,8 +218,8 @@
 						<th class="small{{#ifCond this.totalScore "gteq" ../settings.gameScore}} strike{{/ifCond}}">
 							<div class="name">{{this.name}}</div>
 							<div class="dropsleft">
-								<span>D:&nbsp;{{this.dropsLeft}}</span>
-								<span>M:&nbsp;{{this.middleDropsLeft}}</span>
+								<span class="round drop">{{this.dropsLeft}}</span>
+								<span class="round middle-drop">{{this.middleDropsLeft}}</span>
 							</div>
 						</th>
 					{{/each}}
@@ -266,6 +266,11 @@
 		{{/unless}}
 	</form>
 	<p><a href="#scoreCardGraph">Show Graph View</a> | <a href="#players">Add/Re-enter Player</a></p>
+	<p class="legend">
+		<a class="round drop">&nbsp;</a> - Drops left<br/>
+		<a class="round middle-drop">&nbsp;</a> - Middle Drops left<br/>
+		<a class="round">&nbsp;</a> - Round Number<br/>
+	</p>
 </div>
 
 <!-- Round Score Page Template -->
@@ -346,6 +351,8 @@
 	<h1>We have a winner</h1>
 	<p>Congratulations <b>{{winner.name}}</b>!!!</p>
 	<br />
+	<div class="fb-like" data-href="http://rummyscorecard.com" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
+	<br/>
 	<button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
 </div>
 
@@ -377,13 +384,14 @@
 			<input style="width:auto;" type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
 			<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
 		</form>
-		
+
 	</p>
 	<p>
 		Thank you for your support!<br/><br/>
 		Best,<br/>
 		<a href="http://www.kiranmanda.com">Kiran Manda</a><br />
 	</p>
+	<div class="fb-like" data-href="http://rummyscorecard.com" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
 </div>
 
 <!-- Terms and Conditions Page Template -->
