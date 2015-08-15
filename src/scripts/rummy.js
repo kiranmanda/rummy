@@ -470,6 +470,7 @@ rummy.getNewReentryPlayersRoundScores = function(){
 		playersLength = players.length,
 		i,
 		lastRoundScore;
+
 	for (i = 0; i < playersLength; i++) {
 		if(players[i].totalScore < this.model.settings.gameScore){
 			if(players[i].totalScore > maxScore){
@@ -747,7 +748,10 @@ rummy.bindEvents = function() {
 	$box.on('keyup keypress blur change', 'form[name="saveRoundScore"] input.number', function(e){
 		var numberOfZeroScores = 0,
 			$form = $(this).closest("form"),
-			returnSilent = false;
+			returnSilent = false,
+			editMode = $(this).closest('form').data('editMode');
+
+		if(editMode) return; //Able to edit players after one or more players exit in previous rounds
 
 		$form.find('input.number').each(function(){
 			if($(this).val() === "0"){

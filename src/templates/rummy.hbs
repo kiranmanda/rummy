@@ -104,7 +104,6 @@
 	<h1>Score Card</h1>
 	<div id="graphContainer"></div>
 	<br/>
-	<button class="cta js-hash" data-hash="#roundScore">Enter Scores</button>
 	<p><a href="#scoreCard">Show Table View</a> | <a href="#players">Add/Re-enter Player</a></p>
 </div>
 
@@ -277,7 +276,7 @@
 <div id="roundScore" class="page">
 	{{#ifCond editRound "gteq" 0}}
 		<h1>Edit Round {{inc editRound}} Scores</h1>
-		<form name="saveRoundScore">
+		<form name="saveRoundScore" data-edit-mode="true">
 			{{#each players}}
 			<div>
 				<label>Enter {{this.name}}'s Score:</label>
