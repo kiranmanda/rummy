@@ -38,6 +38,7 @@ rummy.initModel = function() {
 		this.model.players = [];
 		this.model.roundNumber = 1;
 		this.model.rounds = [];
+		this.model.canPlayerReEnter = true;
 	}
 	//Init Data Template 
 	this.template = this["src/templates/rummy.hbs"];
@@ -302,8 +303,8 @@ rummy.updateDrops = function(player) {
 		player.rounds = [];
 	}
 
-	player.dropsLeft = Math.floor((rummy.model.settings.gameScore - player.totalScore) / rummy.model.settings.dropScore);
-	player.middleDropsLeft = Math.floor((rummy.model.settings.gameScore - player.totalScore) / rummy.model.settings.middleDropScore);
+	player.dropsLeft = Math.floor((rummy.model.settings.gameScore - player.totalScore - 1) / rummy.model.settings.dropScore);
+	player.middleDropsLeft = Math.floor((rummy.model.settings.gameScore - player.totalScore - 1) / rummy.model.settings.middleDropScore);
 
 	player.dropsLeft = (player.dropsLeft < 0) ? 0 : player.dropsLeft;
 	player.middleDropsLeft = (player.middleDropsLeft < 0) ? 0 : player.middleDropsLeft;
@@ -358,6 +359,7 @@ rummy.addRoundScores = function(roundScores){
 rummy.resetScores = function(){
 	this.model.rounds = [];
 	this.model.roundNumber = 1;
+	this.model.canPlayerReEnter = true;
 	var players = this.model.players,
 		playersLength = players.length,
 		i;
@@ -522,6 +524,7 @@ rummy.removePlayer = function(index){
 		rummy.resetScores();
 		rummy.model.gameInProgress = false;
 		rummy.model.winner = undefined;
+		rummy.model.canPlayerReEnter = true;
 	}
 	
 	rummy.saveModel();
@@ -530,15 +533,18 @@ rummy.removePlayer = function(index){
 
 rummy.reEnterPlayer = function(index) {
 	rummy.log("Re entering player " + rummy.model.players[index]);
-	var name = rummy.model.players[index].name
-		player = {'name': name};
-	this.removePlayer(index);
-	this.addPlayer(player);
+	if(rummy.canPlayerReEnter()){
+		var name = rummy.model.players[index].name
+			player = {'name': name};
+		this.removePlayer(index);
+		this.addPlayer(player);
+	}
 };
 
 rummy.startGame = function() {
 	rummy.model.gameInProgress = true;
 	rummy.model.winner = undefined;
+	rummy.model.canPlayerReEnter = true;
 	rummy.saveModel();
 	window.location.hash = '#scoreCard';	
 };
@@ -556,10 +562,33 @@ rummy.isThereAWinner = function() {
 	if(activePlayers.length == 1){
 		rummy.model.winner = activePlayers[0];
 		rummy.model.gameInProgress = false;
-		rummy.saveModel();
 		return true;
 	}
 	return false;
+};
+
+rummy.canPlayerReEnter = function(){
+	var players = this.model.players,
+		playersLength = players.length,
+		i,
+		activePlayers = [],
+		maxScore = 0;
+	for (i = 0; i < playersLength; i++){
+		if(players[i].totalScore < this.model.settings.gameScore){
+			if(players[i].totalScore > maxScore){
+				maxScore = players[i].totalScore;
+			}
+		}
+	}
+	if(!rummy.isAnotherPlayerAddedInThisRound()){
+		maxScore = maxScore + 1;
+	}
+	if((rummy.model.settings.gameScore - maxScore - 1) >= rummy.model.settings.dropScore){
+		rummy.model.canPlayerReEnter = true;
+	}else{
+		rummy.model.canPlayerReEnter = false;
+	}
+	return rummy.model.canPlayerReEnter;
 };
 
 rummy.showMessage = function(message){
@@ -610,10 +639,12 @@ rummy.bindEvents = function() {
 		e.preventDefault();
 		if(!rummy.safariPolyFill(this)) return;
 		rummy.model.settings = $(this).serializeObject();
+		
 		if(!rummy.isThereAWinner()){
 			rummy.model.gameInProgress = true;
 			rummy.model.winner = undefined;
 		}
+		rummy.canPlayerReEnter();
 		rummy.saveModel();
 		var $button = $(this).find('button');
 		$button.text("Saved");
@@ -680,16 +711,18 @@ rummy.bindEvents = function() {
 	$page.on('submit', 'form[name=saveRoundScore]', function(e){
 		e.preventDefault();
 		if(!rummy.safariPolyFill(this)) return;
-		var data = $(this).serializeObject();
+		var data = $(this).serializeObject(),
+			winner = false;
 
 		//Check to see if there is more than one active player with O value. If so throw an error.
-
-
 		rummy.log("Saving round score");
 		rummy.log(data.roundScores);
 		rummy.addRoundScores(data.roundScores);
+		winner = rummy.isThereAWinner();
+		rummy.canPlayerReEnter();
 		rummy.saveModel();
-		if(rummy.isThereAWinner()){
+
+		if(winner){
 			window.location.hash = '#winner';
 		}else{
 			if(window.location.hash === '#scoreCard'){
