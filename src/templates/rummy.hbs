@@ -6,7 +6,7 @@
 			<em>A game is currently in progress.</em>
 			<button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
 			<br/>
-			or <a href="#" id="js-abandon">Start New Game</a>
+			or <a href="#" id="js-abandon">Start New Score Card</a>
 		</p>
 	{{else}}
 		{{#if winner}}
@@ -14,10 +14,10 @@
 			<b>"{{winner.name}}"</b> won this game.
 			<button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
 			<br/>
-			or <a href="#" id="js-abandon">Start New Game</a>
+			or <a href="#" id="js-abandon">Start New Score Card</a>
 		</p>
 		{{else}}
-			<form name="newGame"><button class="cta">Start New Game</button></form>
+			<form name="newGame"><button class="cta">Start New Score Card</button></form>
 		{{/if}}
 	{{/if}}
 	<br/>
@@ -93,7 +93,7 @@
 			{{#if winner}}
 				<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
 			{{else}}
-				<br /><form name="newGame"><button class="cta">Start Game</button></form>
+				<br /><form name="newGame"><button class="cta">Start Score Card</button></form>
 			{{/if}}
 		{{/ifCond}}
 	{{/if}}
@@ -338,7 +338,7 @@
 			{{#if winner}}
 				<br/><button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
 			{{else}}
-				<br /><form name="newGame"><button class="cta">Start Game</button></form>
+				<br /><form name="newGame"><button class="cta">Start Score Card</button></form>
 			{{/if}}
 		{{/ifCond}}
 	{{/if}}
