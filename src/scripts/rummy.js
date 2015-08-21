@@ -36,9 +36,15 @@ rummy.initModel = function() {
 		this.model.settings.dropScore = 25;
 		this.model.settings.middleDropScore = 50;
 		this.model.players = [];
-		this.model.roundNumber = 1;
 		this.model.rounds = [];
 		this.model.canPlayerReEnter = true;
+	}else{
+		//Release 1.1 did not have this flag. 
+		//To be backward compatible we need to initialize this
+		if(rummy.model.canPlayerReEnter == undefined){
+			rummy.canPlayerReEnter();
+		}
+		delete this.model.roundNumber;
 	}
 	//Init Data Template 
 	this.template = this["src/templates/rummy.hbs"];
@@ -341,8 +347,6 @@ rummy.addRoundScores = function(roundScores){
 		this.model.rounds.push(roundScores);
 	}
 
-	this.model.roundNumber = this.model.rounds.length;
-
 	for (i = 0; i < playersLength; i++) {
 		rummy.log(roundScores[i])
 		if(this.model.editRound >= 0){
@@ -358,18 +362,19 @@ rummy.addRoundScores = function(roundScores){
 
 rummy.resetScores = function(){
 	this.model.rounds = [];
-	this.model.roundNumber = 1;
 	this.model.canPlayerReEnter = true;
-	var players = this.model.players,
-		playersLength = players.length,
-		i;
-	for (i = 0; i < playersLength; i++) {
-		players[i].totalScore = undefined;
-		players[i].rounds = undefined;
-		this.updateDrops(players[i]);
-	}
+	if(this.model.players && this.model.players.length > 0) {
+		var players = this.model.players,
+			playersLength = players.length,
+			i;
+		for (i = 0; i < playersLength; i++) {
+			players[i].totalScore = undefined;
+			players[i].rounds = undefined;
+			this.updateDrops(players[i]);
+		}
 
-	this.saveModel();
+		this.saveModel();
+	}
 };
 
 rummy.saveModel = function() {
@@ -450,7 +455,7 @@ rummy.addPlayer = function(player){
 		rummy.updateDrops(player);
 		rummy.updateRoundScoresForNewPlayer(player.rounds);
 	}
-	player.inRound = rummy.model.roundNumber;
+	player.inRound = rummy.model.rounds.length + 1;
 	rummy.model.players.push(player);
 	rummy.saveModel();
 	rummy.showPage();
@@ -498,9 +503,10 @@ rummy.getNewReentryPlayersRoundScores = function(){
 rummy.isAnotherPlayerAddedInThisRound = function() {
 	var players = this.model.players,
 		playersLength = players.length,
-		i;
+		i,
+		roundNumber = this.model.rounds.length + 1;
 	for (i = 0; i < playersLength; i++) {
-		if(rummy.model.roundNumber == players[i].inRound){
+		if(roundNumber == players[i].inRound){
 			return true;
 		}
 	}
@@ -639,12 +645,7 @@ rummy.bindEvents = function() {
 		e.preventDefault();
 		if(!rummy.safariPolyFill(this)) return;
 		rummy.model.settings = $(this).serializeObject();
-		
-		if(!rummy.isThereAWinner()){
-			rummy.model.gameInProgress = true;
-			rummy.model.winner = undefined;
-		}
-		rummy.canPlayerReEnter();
+		rummy.resetScores();
 		rummy.saveModel();
 		var $button = $(this).find('button');
 		$button.text("Saved");

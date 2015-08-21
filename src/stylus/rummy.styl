@@ -246,6 +246,10 @@ button[disabled="disabled"].disabled, button[disabled="disabled"].disabled:hover
 	cursor: default;
 }
 
+input:disabled{
+	background-color: #F1F1F1;
+}
+
 .back {
 	font-size: 2em;
 	line-height: 1em;
@@ -442,10 +446,12 @@ ol li {
 		height: 52px;
 		overflow: hidden;
 	}
-	.nameTable{
+	.nameTable {
 		background-color: transparent;
 		float: left;
-		boxShadow(2px 0px 2px #BBB);
+		&.shadow {
+			boxShadow(2px 0px 2px #BBB);
+		}
 		.name {
 			width: 50px;
 			font-size: 12px;

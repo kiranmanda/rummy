@@ -85,6 +85,8 @@
 		<input type="text" name="name" required="required" pattern="^[A-Za-z0-9]+[A-Za-z0-9 ]*$" maxLength="15" title="Must contain only letters and numbers" placeholder="Enter player name"/>
 		<button class="cta">Add Player</button>
 	</form>
+	{{else}}
+	<p><b>Adding or rentering players is not available.</b> A player will only be able to re-enter if there is one or more drops left after re entry</p>
 	{{/if}}
 	{{#if gameInProgress}}
 		<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
@@ -113,7 +115,7 @@
 	<form name="saveRoundScore">
 		{{#ifCond players.length 'gt' 4}}
 			<div class="tables">
-				<table class="nameTable">
+				<table class="nameTable shadow">
 					<tr>
 						<th></th>
 					</tr>
@@ -130,7 +132,7 @@
 					{{/each}}
 				</table>
 				<div class="tableBox">
-					{{#ifCond roundNumber 'gteq' 4}}
+					{{#ifCond rounds.length 'gteq' 4}}
 						<table>
 							<tr>
 								{{#each rounds}}
@@ -320,17 +322,25 @@
 	<form name="scoreSettings">
 		<div>
 			<label>Game end score</label>
-			<input type="text" pattern="\b([1-4][0-9]{2}|500)\b" maxLength="3" title="Choose a value between 100 and 500" name="gameScore" placeholder="Game end score" value="{{settings.gameScore}}" required="required" {{#if gameInProgress}}readonly="readonly"{{/if}} />
+			<input type="text" pattern="\b([1-4][0-9]{2}|500)\b" maxLength="3" title="Choose a value between 100 and 500" name="gameScore" placeholder="Game end score" value="{{settings.gameScore}}" required="required" {{#unless winner}}{{#ifCond rounds.length 'gt' 0}}disabled="disabled"{{/ifCond}}{{/unless}} />
 		</div>
 		<div>
 			<label>Drop score</label>
-			<input type="text" pattern="\b([1-4][0-9]|50)\b" maxLength="2" title="Choose a value between 10 and 50" name="dropScore" placeholder="Drop score" value="{{settings.dropScore}}"  required="required" {{#if gameInProgress}}readonly="readonly"{{/if}} />
+			<input type="text" pattern="\b([1-4][0-9]|50)\b" maxLength="2" title="Choose a value between 10 and 50" name="dropScore" placeholder="Drop score" value="{{settings.dropScore}}"  required="required" {{#unless winner}}{{#ifCond rounds.length 'gt' 0}}disabled="disabled"{{/ifCond}}{{/unless}} />
 		</div>
 		<div>
 			<label>Middle drop score</label>
-			<input type="text" pattern="\b([2-9][0-9]|100)\b" maxLength="3" title="Choose a value between 20 and 100" name="middleDropScore" placeholder="Middle drop score" value="{{settings.middleDropScore}}" required="required" {{#if gameInProgress}}readonly="readonly"{{/if}} />
+			<input type="text" pattern="\b([2-9][0-9]|100)\b" maxLength="3" title="Choose a value between 20 and 100" name="middleDropScore" placeholder="Middle drop score" value="{{settings.middleDropScore}}" required="required" {{#unless winner}}{{#ifCond rounds.length 'gt' 0}}disabled="disabled"{{/ifCond}}{{/unless}} />
 		</div>
-		{{#unless gameInProgress}}<button class="cta" >Save Game Settings</button>{{/unless}}
+		{{#if winner}}
+			<button class="cta" >Save and Start New Game</button>
+		{{else}}
+			{{#ifCond rounds.length 'gt' 0}}
+				<p><b>Editing game setting is not available.</b> You can only change the game settings before entering your first round scores.</p>
+			{{else}}
+				<button class="cta" >Save Game Settings</button>
+			{{/ifCond}}
+		{{/if}}
 	</form>
 	{{#if gameInProgress}}
 		<br/><button class="cta js-hash" data-hash="#scoreCard">Back to Score Card</button>
