@@ -104,7 +104,7 @@
 	<h1>Score Card</h1>
 	<div id="graphContainer"></div>
 	<br/>
-	<p><a href="#scoreCard">Show Table View</a> | <a href="#players">Add/Re-enter Player</a></p>
+	<p><a href="#scoreCard">Show Table View</a>{{#unless winner}} | <a href="#players">Add/Re-enter Player</a>{{/unless}}</p>
 </div>
 
 <!-- Score Card Page Template -->
@@ -264,7 +264,8 @@
 			<button class="cta" type="submit">Save Round Score</button>
 		{{/unless}}
 	</form>
-	<p><a href="#scoreCardGraph">Show Graph View</a> | <a href="#players">Add/Re-enter Player</a></p>
+	<p>
+		<a href="#scoreCardGraph">Show Graph View</a>{{#unless winner}} | <a href="#players">Add/Re-enter Player</a></p>{{/unless}}
 	<p class="legend">
 		<a class="round drop">&nbsp;</a> - Drops left<br/>
 		<a class="round middle-drop">&nbsp;</a> - Middle Drops left<br/>

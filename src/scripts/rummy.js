@@ -719,6 +719,10 @@ rummy.bindEvents = function() {
 		rummy.log(data.roundScores);
 		rummy.addRoundScores(data.roundScores);
 		winner = rummy.isThereAWinner();
+		if(!winner){
+			rummy.model.gameInProgress = true;
+			rummy.model.winner = undefined;
+		}
 		rummy.canPlayerReEnter();
 		rummy.saveModel();
 
