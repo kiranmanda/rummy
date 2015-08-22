@@ -10,6 +10,7 @@ module.exports = function(grunt) {
           'target/js/vendor.js': [
             'src/vendor/scripts/js.cookie.js',
             'src/vendor/scripts/jquery-2.1.4.min.js',
+            'src/vendor/scripts/jquery-ui.min.js',
             'src/vendor/scripts/handlebars-v3.0.3.js',
             'src/vendor/scripts/highcharts.js',
             'src/vendor/scripts/drilldown.js'
@@ -28,7 +29,7 @@ module.exports = function(grunt) {
     stylus: {
       compile: {
         files: {
-          'target/css/<%= pkg.name %>.css': ['src/**/*.styl'] // compile and concat into single file
+          'target/css/<%= pkg.name %>.css': ['src/vendor/styles/jquery-ui.min.css','src/**/*.styl'] // compile and concat into single file
         }
       }
     },

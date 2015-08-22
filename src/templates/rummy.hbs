@@ -1,25 +1,23 @@
 <!-- Intro Page Template -->
 <div id="intro" class="page">
 	<h1>Rummy</h1>
-	{{#if gameInProgress}}
+	{{#gameInProgress}}
 		<p>
 			<em>A game is currently in progress.</em>
-			<button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
+			<button class="cta js-hash" data-hash="#scoreCard">View Score Card</button>
 			<br/>
 			or <a href="#" id="js-abandon">Start New Score Card</a>
 		</p>
 	{{else}}
 		{{#if winner}}
 		<p>
-			<b>"{{winner.name}}"</b> won this game.
-			<button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
-			<br/>
-			or <a href="#" id="js-abandon">Start New Score Card</a>
+			<b>"{{winner.name}}"</b> won this game. <a href="#scoreCard">View Score Card</a>
+			<button class="cta" id="js-abandon">Start New Score Card</button>
 		</p>
 		{{else}}
 			<form name="newGame"><button class="cta">Start New Score Card</button></form>
 		{{/if}}
-	{{/if}}
+	{{/gameInProgress}}
 	<br/>
 	<table border="1">
 		<tr>
@@ -61,44 +59,47 @@
 <!-- Players Page Template -->
 <div id="players" class="page">
 	<h1>Players</h1>
-	<ol>
-		{{#each players}}
-			<li>
-				{{this.name}} 
-				{{#if ../gameInProgress}}
-					{{#if ../../canPlayerReEnter}}
-						{{#ifCond this.totalScore "gteq" ../../../settings.gameScore}}
+	{{#gameInProgress}}
+		<ol>
+			{{#each players}}
+				<li>
+					{{this.name}} 
+					{{#if ../canPlayerReEnter}}
+						{{#ifCond this.totalScore "gteq" ../../settings.gameScore}}
 							<button data-player-index="{{@index}}" class="re-enter js-re-enter" type="button">Re Enter</button>
 						{{/ifCond}}
 					{{/if}}
-					{{#if ../rounds}}{{else}}
-						<button data-player-index="{{@index}}" type="button" class="remove js-remove">Remove</button>
-					{{/if}}
-				{{else}}
-					<button data-player-index="{{@index}}" type="button" class="remove js-remove">Remove</button>
-				{{/if}}
-			</li>
-		{{/each}}
-	</ol>
-	{{#if canPlayerReEnter}}
-	<form name="addPlayer">
-		<input type="text" name="name" required="required" pattern="^[A-Za-z0-9]+[A-Za-z0-9 ]*$" maxLength="15" title="Must contain only letters and numbers" placeholder="Enter player name"/>
-		<button class="cta">Add Player</button>
-	</form>
+				</li>
+			{{/each}}
+		</ol>
 	{{else}}
-	<p><b>Adding or rentering players is not available.</b> A player will only be able to re-enter if there is one or more drops left after re entry</p>
+		<ol class="sortable">
+			{{#each players}}
+				<li>
+					<span class="ui-icon ui-icon-arrow-4"></span>
+					{{this.name}} 
+					<button data-player-index="{{@index}}" type="button" class="remove js-remove">Remove</button>
+				</li>
+			{{/each}}
+		</ol>
+	{{/gameInProgress}}
+	{{#if canPlayerReEnter}}
+		<form name="addPlayer">
+			<input type="text" name="name" required="required" pattern="^[A-Za-z0-9]+[A-Za-z0-9 ]*$" maxLength="15" title="Must contain only letters and numbers" placeholder="Enter player name"/>
+			<button class="cta">Add Player</button>
+		</form>
+	{{else}}
+		<p>
+			<b>Adding or rentering players is not available.</b> A player will only be able to re-enter if there is one or more drops left after re entry
+		</p>
 	{{/if}}
-	{{#if gameInProgress}}
+	{{#gameInProgress}}
 		<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
 	{{else}}
 		{{#ifCond players.length 'gt' 1}}
-			{{#if winner}}
-				<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
-			{{else}}
-				<br /><form name="newGame"><button class="cta">Start Score Card</button></form>
-			{{/if}}
+			<br /><form name="newGame"><button class="cta">Start New Score Card</button></form>
 		{{/ifCond}}
-	{{/if}}
+	{{/gameInProgress}}
 </div>
 
 <!-- Score Card Page Template -->
@@ -332,27 +333,21 @@
 			<label>Middle drop score</label>
 			<input type="text" pattern="\b([2-9][0-9]|100)\b" maxLength="3" title="Choose a value between 20 and 100" name="middleDropScore" placeholder="Middle drop score" value="{{settings.middleDropScore}}" required="required" {{#unless winner}}{{#ifCond rounds.length 'gt' 0}}disabled="disabled"{{/ifCond}}{{/unless}} />
 		</div>
-		{{#if winner}}
-			<button class="cta" >Save and Start New Game</button>
+		{{#gameInProgress}}
+			<p>
+				<b>Editing game setting is not available.</b> You can only change the game settings before entering your first round scores.
+			</p>
 		{{else}}
-			{{#ifCond rounds.length 'gt' 0}}
-				<p><b>Editing game setting is not available.</b> You can only change the game settings before entering your first round scores.</p>
+			{{#if winner}}
+				<button class="cta" >Save &amp; Start New Score Card</button>
 			{{else}}
 				<button class="cta" >Save Game Settings</button>
-			{{/ifCond}}
-		{{/if}}
-	</form>
-	{{#if gameInProgress}}
-		<br/><button class="cta js-hash" data-hash="#scoreCard">Back to Score Card</button>
-	{{else}}
-		{{#ifCond players.length 'gt' 1}}
-			{{#if winner}}
-				<br/><button class="cta js-hash" data-hash="#scoreCard">Score Card</button>
-			{{else}}
-				<br /><form name="newGame"><button class="cta">Start Score Card</button></form>
 			{{/if}}
-		{{/ifCond}}
-	{{/if}}
+		{{/gameInProgress}}
+	</form>
+	{{#gameInProgress}}
+		<br/><button class="cta js-hash" data-hash="#scoreCard">Back to Score Card</button>
+	{{/gameInProgress}}
 	<p><a href="#reset">Reset to Defaults</a></p>
 </div>
 

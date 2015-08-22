@@ -25,3 +25,13 @@ Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
 Handlebars.registerHelper("inc", function(value, options) {
     return parseInt(value) + 1;
 });
+
+
+Handlebars.registerHelper("gameInProgress", function(options) {
+    if(rummy.model.rounds.length > 0 && rummy.model.winner == undefined){
+        return options.fn(this);
+    }else{
+        return options.inverse(this);
+    }
+});
+

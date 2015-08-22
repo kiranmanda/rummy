@@ -45,6 +45,7 @@ rummy.initModel = function() {
 			rummy.canPlayerReEnter();
 		}
 		delete this.model.roundNumber;
+		delete this.model.gameInProgress;
 	}
 	//Init Data Template 
 	this.template = this["src/templates/rummy.hbs"];
@@ -121,8 +122,27 @@ rummy.showPage = function() {
 			if(pageName == '#scoreCardGraph'){
 				rummy.showDrillDownGraph();
 			}
+			if(pageName == '#players'){
+				rummy.initPlayerSeating();
+			}
 		});
 
+};
+
+rummy.initPlayerSeating = function() {
+	var from, to;
+	$('.sortable').sortable({
+      placeholder: "ui-state-highlight",
+      start: function( event, ui ) {
+      	from = ui.item.index();
+      }, 
+      update: function( event, ui ) {
+      	to = ui.item.index();
+      	rummy.log('Change seat of player from '+ from +' to '+ to);
+      	rummy.model.players.move(from, to);
+      	rummy.saveModel();
+      }
+    });
 };
 
 rummy.getPlayerNames = function () {
@@ -448,7 +468,7 @@ rummy.addPlayer = function(player){
 		return;
 	}
 
-	if(rummy.model.gameInProgress) {
+	if(rummy.model.rounds.length > 0 && rummy.model.winner == undefined) {
 		rummy.log("Game is currently in progress. Retrieving active player round score who has the max totalScore");
 		player.rounds = rummy.getNewReentryPlayersRoundScores();
 		player.totalScore = rummy.sumScores(player.rounds);
@@ -528,7 +548,6 @@ rummy.removePlayer = function(index){
 
 	if(rummy.model.players.length < 2) {
 		rummy.resetScores();
-		rummy.model.gameInProgress = false;
 		rummy.model.winner = undefined;
 		rummy.model.canPlayerReEnter = true;
 	}
@@ -548,7 +567,6 @@ rummy.reEnterPlayer = function(index) {
 };
 
 rummy.startGame = function() {
-	rummy.model.gameInProgress = true;
 	rummy.model.winner = undefined;
 	rummy.model.canPlayerReEnter = true;
 	rummy.saveModel();
@@ -567,7 +585,6 @@ rummy.isThereAWinner = function() {
 	}
 	if(activePlayers.length == 1){
 		rummy.model.winner = activePlayers[0];
-		rummy.model.gameInProgress = false;
 		return true;
 	}
 	return false;
@@ -721,7 +738,6 @@ rummy.bindEvents = function() {
 		rummy.addRoundScores(data.roundScores);
 		winner = rummy.isThereAWinner();
 		if(!winner){
-			rummy.model.gameInProgress = true;
 			rummy.model.winner = undefined;
 		}
 		rummy.canPlayerReEnter();
