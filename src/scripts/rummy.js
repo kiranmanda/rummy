@@ -132,16 +132,20 @@ rummy.showPage = function() {
 rummy.initPlayerSeating = function() {
 	var from, to;
 	$('.sortable').sortable({
-      placeholder: "ui-state-highlight",
-      start: function( event, ui ) {
-      	from = ui.item.index();
-      }, 
-      update: function( event, ui ) {
-      	to = ui.item.index();
-      	rummy.log('Change seat of player from '+ from +' to '+ to);
-      	rummy.model.players.move(from, to);
-      	rummy.saveModel();
-      }
+		delay: 200,
+		handle: '.handle',
+      	placeholder: "ui-state-highlight",
+		start: function( event, ui ) {
+			from = ui.item.index();
+		}, 
+		update: function( event, ui ) {
+			to = ui.item.index();
+			if(from !== to){
+				rummy.log('Change seat of player from '+ from +' to '+ to);
+				rummy.model.players.move(from, to);
+				rummy.saveModel();
+			}
+		}
     });
 };
 
@@ -825,6 +829,12 @@ rummy.bindEvents = function() {
 			$('#js-message').fadeOut();
 		}
 
+	});
+
+	$box.on('mousedown' ,'.handle', function(e){
+		$(this).closest('li').css('background-color','#FFEEAA');
+	}).on('mouseup', '.handle', function(e){
+		$(this).closest('li').css('background-color','transparent');
 	});
 
 	$('body').on('click', function(){

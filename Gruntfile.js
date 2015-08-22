@@ -11,6 +11,7 @@ module.exports = function(grunt) {
             'src/vendor/scripts/js.cookie.js',
             'src/vendor/scripts/jquery-2.1.4.min.js',
             'src/vendor/scripts/jquery-ui.min.js',
+            'src/vendor/scripts/jquery.ui.touch-punch.min.js',
             'src/vendor/scripts/handlebars-v3.0.3.js',
             'src/vendor/scripts/highcharts.js',
             'src/vendor/scripts/drilldown.js'

@@ -76,8 +76,10 @@
 		<ol class="sortable">
 			{{#each players}}
 				<li>
-					<span class="ui-icon ui-icon-arrow-4"></span>
-					{{this.name}} 
+					<span class="handle">
+						<span class="ui-icon ui-icon-arrow-4"></span>
+						{{this.name}}
+					</span>
 					<button data-player-index="{{@index}}" type="button" class="remove js-remove">Remove</button>
 				</li>
 			{{/each}}
