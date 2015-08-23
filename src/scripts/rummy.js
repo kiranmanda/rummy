@@ -246,7 +246,24 @@ rummy.showDrillDownGraph = function(){
     // Create the chart
     $('#graphContainer').highcharts({
         chart: {
-            type: 'column'
+            type: 'column',
+            events : {
+            	load: function(){
+            		rummy.log('Call back after chart load');
+            		for (var i = 0; i < rummy.model.players.length; i++) {
+            			if(rummy.model.players[i].totalScore >= rummy.model.settings.gameScore){
+            				$('.highcharts-xaxis-labels text:eq('+i+')').css({
+            					'text-decoration':'line-through',
+            					'fill': 'rgb(200,200,200)'
+            				});
+            				$('.highcharts-drilldown-data-label:eq('+i+') text').css({
+            					'text-decoration':'line-through',
+            					'fill': 'rgb(200,200,200)'
+            				});
+            			}
+            		};
+            	}
+            }
         },
         
         title: {
