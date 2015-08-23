@@ -657,6 +657,16 @@ rummy.isValidScore = function(score) {
 	return false;
 };
 
+rummy.abandonGame = function(){
+	rummy.log("Abandoning current game");
+	rummy.resetScores();
+	if(rummy.model.players.length < 2){ 
+		window.location.hash = '#players'
+	} else {
+		rummy.startGame();
+	}
+};
+
 rummy.bindEvents = function() {
 	
 	var hashMenuOpen = undefined;
@@ -682,13 +692,8 @@ rummy.bindEvents = function() {
 		e.preventDefault();
 		if(!rummy.safariPolyFill(this)) return;
 		rummy.model.settings = $(this).serializeObject();
-		rummy.resetScores();
 		rummy.saveModel();
-		var $button = $(this).find('button');
-		$button.text("Saved");
-		setTimeout(function(){
-			$button.text("Save Game Settings");
-		}, 1000);
+		rummy.abandonGame();
 	});
 
 	$page.on('submit', 'form[name="newGame"]', function(e){
@@ -808,13 +813,7 @@ rummy.bindEvents = function() {
 
 	$page.on('click', '#js-abandon', function(e){
 		e.preventDefault();
-		rummy.log("Abandoning current game");
-		rummy.resetScores();
-		if(rummy.model.players.length < 2){ 
-			window.location.hash = '#players'
-		} else {
-			rummy.startGame();
-		}
+		rummy.abandonGame();
 	});
 
 	$box.on('click', 'ul.hamburger', function(e){
