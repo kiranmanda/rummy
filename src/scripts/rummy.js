@@ -775,7 +775,8 @@ rummy.bindEvents = function() {
 		var data = $(this).serializeObject(),
 			winner = false,
 			editMode = $(this).data('editMode'),
-			numberOfZeroScores = 0;
+			numberOfZeroScores = 0,
+			hasInValidScore = false;
 
 		//Able to edit players after one or more players exit in previous rounds;
 		if(!editMode) {
@@ -784,7 +785,17 @@ rummy.bindEvents = function() {
 				if($(this).val() === "0"){
 					numberOfZeroScores++;
 				}
+				if(!rummy.isValidScore($(this).val())){
+					hasInValidScore = true;
+				}
 			});
+
+			if(hasInValidScore){
+				rummy.showMessage("A player score must be 0 or any number between 2 and 80 both inclusive.");
+				$(this).find('button').addClass("disabled").attr("disabled","disabled");
+				return;
+			}
+
 			if(numberOfZeroScores !== 1){
 				rummy.showMessage("One and only one player can win a round.");
 				$(this).find('button').addClass("disabled").attr("disabled","disabled");
@@ -855,12 +866,11 @@ rummy.bindEvents = function() {
 		window.location.hash = "#intro";
 	});
 
-	$box.on('change', 'form[name="saveRoundScore"] input.number', function(e){
+	$box.on('keyup change', 'form[name="saveRoundScore"] input.number', function(e){
 		var $form = $(this).closest("form"),
 			score = $(this).val();
 		if(!rummy.isValidScore(score)){
 		    rummy.showMessage($(this).attr("title"));
-			$form.find('button').addClass("disabled").attr("disabled","disabled");
 		}else{
 			$form.find('button').removeClass("disabled").removeAttr("disabled");
 		}
