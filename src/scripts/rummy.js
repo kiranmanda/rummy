@@ -639,7 +639,23 @@ rummy.safariPolyFill = function(obj) {
 	    }
 	}
 	return true;
-}
+};
+
+rummy.checkValidity = function(value, pattern) {
+	if(pattern && value) {
+		return (new RegExp(pattern)).test(value);
+	}
+	return false;
+};
+
+rummy.isValidScore = function(score) {
+	if(score == undefined) return false;
+	var s = +score; //convert to number
+	if(s >= 0 && s<=80 && s!==1){
+		return true;
+	}
+	return false;
+};
 
 rummy.bindEvents = function() {
 	
@@ -733,10 +749,30 @@ rummy.bindEvents = function() {
 	$page.on('submit', 'form[name=saveRoundScore]', function(e){
 		e.preventDefault();
 		if(!rummy.safariPolyFill(this)) return;
-		var data = $(this).serializeObject(),
-			winner = false;
 
-		//Check to see if there is more than one active player with O value. If so throw an error.
+		var data = $(this).serializeObject(),
+			winner = false,
+			editMode = $(this).data('editMode'),
+			numberOfZeroScores = 0;
+
+		//Able to edit players after one or more players exit in previous rounds;
+		if(!editMode) {
+			//Check to see if there is more than one active player with O value. If so throw an error.
+			$(this).find('input.number').each(function(){
+				if($(this).val() === "0"){
+					numberOfZeroScores++;
+				}
+			});
+			if(numberOfZeroScores !== 1){
+				rummy.showMessage("One and only one player can win a round.");
+				$(this).find('button').addClass("disabled").attr("disabled","disabled");
+				return;
+			}else{
+				$(this).find('button').removeClass("disabled").removeAttr("disabled");
+				$('#js-message').fadeOut();
+			}
+		}
+
 		rummy.log("Saving round score");
 		rummy.log(data.roundScores);
 		rummy.addRoundScores(data.roundScores);
@@ -803,32 +839,15 @@ rummy.bindEvents = function() {
 		window.location.hash = "#intro";
 	});
 
-	$box.on('keyup keypress blur change', 'form[name="saveRoundScore"] input.number', function(e){
-		var numberOfZeroScores = 0,
-			$form = $(this).closest("form"),
-			returnSilent = false,
-			editMode = $(this).closest('form').data('editMode');
-
-		if(editMode) return; //Able to edit players after one or more players exit in previous rounds
-
-		$form.find('input.number').each(function(){
-			if($(this).val() === "0"){
-				numberOfZeroScores++;
-			}else if($(this).val() === ""){
-				returnSilent = true;
-			}
-		});
-
-		if(returnSilent) return;
-
-		if(numberOfZeroScores !== 1){
-			rummy.showMessage("One and only one player can win a round.");
+	$box.on('change', 'form[name="saveRoundScore"] input.number', function(e){
+		var $form = $(this).closest("form"),
+			score = $(this).val();
+		if(!rummy.isValidScore(score)){
+		    rummy.showMessage($(this).attr("title"));
 			$form.find('button').addClass("disabled").attr("disabled","disabled");
 		}else{
 			$form.find('button').removeClass("disabled").removeAttr("disabled");
-			$('#js-message').fadeOut();
 		}
-
 	});
 
 	$box.on('mousedown' ,'.handle', function(e){

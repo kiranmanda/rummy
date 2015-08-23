@@ -162,7 +162,7 @@
 										{{/unless}}
 									{{else}}
 										{{#unless ../../winner}}
-											<td class="col"><input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" maxLength="2" /></td>
+											<td class="col"><input type="number" class="number" inputmode="numeric" min="0" max="80" pattern="[0-9]*" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" maxLength="2" /></td>
 										{{/unless}}
 									{{/ifCond}}
 									<td class="total"><b>{{this.totalScore}}</b></td>
@@ -195,7 +195,7 @@
 										{{/unless}}
 									{{else}}
 										{{#unless ../../winner}}
-											<td class="col"><input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" maxLength="2" /></td>
+											<td class="col"><input type="number" class="number" inputmode="numeric" min="0" max="80" pattern="[0-9]*" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" maxLength="2" /></td>
 										{{/unless}}
 									{{/ifCond}}
 		    					</tr>
@@ -249,7 +249,7 @@
 						{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
 							<input type="hidden" name="roundScores" value="0" />
 						{{else}}
-							<input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="{{this.name}}" maxLength="2"/>
+							<input type="number" class="number" inputmode="numeric" min="0" max="80" pattern="[0-9]*" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="{{this.name}}" maxLength="2"/>
 						{{/ifCond}}
 					</td>
 					{{/each}}
@@ -288,7 +288,7 @@
 				<label>Enter {{this.name}}'s Score:</label>
 				{{#each rounds}}
 					{{#ifCond ../../editRound "eq" @index}}
-						<input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="{{this}}" required="required" maxLength="2"/>
+						<input type="number" class="number" inputmode="numeric" min="0" max="80" pattern="[0-9]*" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="{{this}}" required="required" maxLength="2"/>
 					{{/ifCond}}
 				{{/each}}
 			</div>
@@ -302,7 +302,7 @@
 				{{#ifCond this.totalScore "gteq" ../settings.gameScore}}
 					<input type="hidden" name="roundScores" value="0" />
 				{{else}}
-					<input type="text" class="number" pattern="\b([0]|[2-9]|[1-7][0-9]|80)\b" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="Enter {{this.name}}'s Score" maxLength="2"/>
+					<input type="number" class="number" inputmode="numeric" min="0" max="80" pattern="[0-9]*" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="" required="required" placeholder="Enter {{this.name}}'s Score" maxLength="2"/>
 				{{/ifCond}}
 			{{/each}}
 			<button class="cta">Save</button>
@@ -325,15 +325,15 @@
 	<form name="scoreSettings">
 		<div>
 			<label>Game end score</label>
-			<input type="text" pattern="\b([1-4][0-9]{2}|500)\b" maxLength="3" title="Choose a value between 100 and 500" name="gameScore" placeholder="Game end score" value="{{settings.gameScore}}" required="required" {{#unless winner}}{{#ifCond rounds.length 'gt' 0}}disabled="disabled"{{/ifCond}}{{/unless}} />
+			<input type="number" inputmode="numeric" pattern="[0-9]*" min="100" max="500" maxLength="3" title="Choose a value between 100 and 500" name="gameScore" placeholder="Game end score" value="{{settings.gameScore}}" required="required" {{#unless winner}}{{#ifCond rounds.length 'gt' 0}}disabled="disabled"{{/ifCond}}{{/unless}} />
 		</div>
 		<div>
 			<label>Drop score</label>
-			<input type="text" pattern="\b([1-4][0-9]|50)\b" maxLength="2" title="Choose a value between 10 and 50" name="dropScore" placeholder="Drop score" value="{{settings.dropScore}}"  required="required" {{#unless winner}}{{#ifCond rounds.length 'gt' 0}}disabled="disabled"{{/ifCond}}{{/unless}} />
+			<input type="number" inputmode="numeric" pattern="[0-9]*" min="10" max="50" maxLength="2" title="Choose a value between 10 and 50" name="dropScore" placeholder="Drop score" value="{{settings.dropScore}}"  required="required" {{#unless winner}}{{#ifCond rounds.length 'gt' 0}}disabled="disabled"{{/ifCond}}{{/unless}} />
 		</div>
 		<div>
 			<label>Middle drop score</label>
-			<input type="text" pattern="\b([2-9][0-9]|100)\b" maxLength="3" title="Choose a value between 20 and 100" name="middleDropScore" placeholder="Middle drop score" value="{{settings.middleDropScore}}" required="required" {{#unless winner}}{{#ifCond rounds.length 'gt' 0}}disabled="disabled"{{/ifCond}}{{/unless}} />
+			<input type="number" inputmode="numeric" pattern="[0-9]*" min="20" max="100" maxLength="3" title="Choose a value between 20 and 100" name="middleDropScore" placeholder="Middle drop score" value="{{settings.middleDropScore}}" required="required" {{#unless winner}}{{#ifCond rounds.length 'gt' 0}}disabled="disabled"{{/ifCond}}{{/unless}} />
 		</div>
 		{{#gameInProgress}}
 			<p>
