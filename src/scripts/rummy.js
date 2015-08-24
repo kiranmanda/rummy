@@ -641,7 +641,7 @@ rummy.showMessage = function(message){
 	rummy.log(message);
 	setTimeout(function(){
 		$('#js-message').fadeOut();
-	}, 3500);
+	}, 5000);
 };
 
 rummy.safariPolyFill = function(obj) {
@@ -794,7 +794,7 @@ rummy.bindEvents = function() {
 				$(this).find('button').addClass("disabled").attr("disabled","disabled");
 				return;
 			}
-			
+
 			//Check to see if there is more than one active player with O value. If so throw an error.
 			if(numberOfZeroScores === 0){
 				rummy.showMessage("There should be a winner. A player score shoule be zero");
