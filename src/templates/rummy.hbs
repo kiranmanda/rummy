@@ -99,7 +99,7 @@
 		<p><sub class="back">&laquo;</sub> <a href="#scoreCard">Back to Score Card</a></p>
 	{{else}}
 		{{#ifCond players.length 'gt' 1}}
-			<br /><form name="newGame"><button class="cta">Start New Score Card</button></form>
+			<br /><form name="newGame"><button class="cta">View Score Card</button></form>
 		{{/ifCond}}
 	{{/gameInProgress}}
 </div>
@@ -288,7 +288,7 @@
 				<label>Enter {{this.name}}'s Score:</label>
 				{{#each rounds}}
 					{{#ifCond ../../editRound "eq" @index}}
-						<input type="number" class="number" inputmode="numeric" min="0" max="80" pattern="[0-9]*" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="{{this}}" required="required" maxLength="2"/>
+						<input type="number" class="number" inputmode="numeric" min="0" max="81" pattern="[0-9]*" title="Must be 0 or any number between 2 and 80 both inclusive." name="roundScores" value="{{this}}" required="required" maxLength="2"/>
 					{{/ifCond}}
 				{{/each}}
 			</div>
