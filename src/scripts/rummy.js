@@ -185,7 +185,7 @@ rummy.getPlayerAndRoundData = function () {
 		dataPoint.id = players[i].name;
 		dataPoint.data = [];
 		rounds = players[i].rounds;
-		roundsLength = rounds.length
+		roundsLength = rounds.length;
 		for (j = 0; j < roundsLength; j++) {
 			roundDataPoint = [];
 			roundDataPoint[0] = 'Round ' + (j+1);
@@ -583,7 +583,7 @@ rummy.safariPolyFill = function(obj) {
 	    }
 	}
 	return true;
-}
+};
 
 rummy.bindEvents = function() {
 	
